@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-xl rounded-2xl">
+    <h2 class="text-3xl font-bold text-gray-800 tracking-tight mb-6">Add Feed</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="unit_of_measure" class="block text-sm font-medium text-gray-700">Unit of Measure</label>
+                    {{ form.unit_of_measure }}
+                </div>
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Feed Name</label>
+                    {{ form.name }}
+                </div>
+                <div>
+                    <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                    {{ form.quantity }}
+                </div>
+                <div>
+                    <label for="price_per_unit" class="block text-sm font-medium text-gray-700">Price per Unit</label>
+                    {{ form.price_per_unit }}
+                </div>
+                <div>
+                    <label for="food_type" class="block text-sm font-medium text-gray-700">Food Type</label>
+                    {{ form.food_type }}
+                </div>
+                <div>
+                    <label for="feeding_instructions" class="block text-sm font-medium text-gray-700">Feeding Instructions</label>
+                    {{ form.feeding_instructions }}
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <button type="submit" class="px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-600 transition">
+                    Save Feed
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

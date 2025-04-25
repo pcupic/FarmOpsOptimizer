@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-semibold text-gray-900">Pesticide List</h1>
+        <a href="{% url 'resources:add_pesticide' %}" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 focus:outline-none">
+            Add New Pesticide
+        </a>
+    </div>
+
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+        <div class="text-sm p-2 rounded {{ message.tags }} bg-emerald-100 text-emerald-800">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    
+
+    <!-- Table displaying pesticide details -->
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+            <thead class="bg-emerald-50 text-gray-800 text-sm uppercase tracking-wider">
+                <tr>
+                    <th class="py-3 px-4 border-b border-gray-200 text-left">Name</th>
+                    <th class="py-3 px-4 border-b border-gray-200 text-left">Type</th>
+                    <th class="py-3 px-4 border-b border-gray-200 text-center">Quantity</th>
+                    <th class="py-3 px-4 border-b border-gray-200 text-left">Price/Unit</th>
+                    <th class="py-3 px-4 border-b border-gray-200 text-left">Unit of Measure</th>
+                    <th class="py-3 px-4 border-b border-gray-200 text-left">Application Instructions</th>
+                    <th class="py-3 px-4 border-b border-gray-200 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm text-gray-700">
+                {% for pesticide in pesticides %}
+                <tr class="hover:bg-gray-50 transition-all duration-200">
+                    <td class="py-3 px-4 border-b border-gray-200">{{ pesticide.name }}</td>
+                    <td class="py-3 px-4 border-b border-gray-200">{{ pesticide.pesticide_type }}</td>
+                    <td class="py-3 px-4 border-b border-gray-200 text-center">
+                        <div class="flex items-center justify-center space-x-2">
+                            <a href="{% url 'resources:decrease_quantity_pesticide' pesticide.id %}" class="text-red-500 hover:text-red-700 font-bold">−</a>
+                            <span>{{ pesticide.quantity }}</span>
+                            <a href="{% url 'resources:increase_quantity_pesticide' pesticide.id %}" class="text-green-500 hover:text-green-700 font-bold">+</a>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4 border-b border-gray-200">{{ pesticide.price_per_unit }}</td>
+                    <td class="py-3 px-4 border-b border-gray-200">{{ pesticide.get_unit_of_measure_display }}</td>
+                    <td class="py-3 px-4 border-b border-gray-200">{{ pesticide.application_instructions }}</td>
+                    <td class="py-3 px-4 border-b border-gray-200 text-right">
+                        <a href="{% url 'resources:add_pesticide' %}" class="text-blue-500 hover:text-blue-700 font-bold">Edit</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="py-4 px-4 text-center text-gray-500">No pesticides found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

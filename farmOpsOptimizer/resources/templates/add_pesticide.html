@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto p-8 bg-white shadow-lg rounded-2xl mt-10 animate-fade-in">
+    <h2 class="text-3xl font-extrabold text-emerald-700 mb-6 text-center">
+        Add New Pesticide
+    </h2>
+
+    <form method="POST" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Pesticide Name -->
+        <div class="flex flex-col">
+            <label for="id_name" class="text-lg font-medium text-gray-700 mb-2">Pesticide Name</label>
+            {{ form.name }}
+        </div>
+
+        <!-- Quantity -->
+        <div class="flex flex-col">
+            <label for="id_quantity" class="text-lg font-medium text-gray-700 mb-2">Quantity</label>
+            {{ form.quantity }}
+        </div>
+
+        <!-- Price per Unit -->
+        <div class="flex flex-col">
+            <label for="id_price_per_unit" class="text-lg font-medium text-gray-700 mb-2">Price per Unit (€)</label>
+            {{ form.price_per_unit }}
+        </div>
+
+        <!-- Pesticide Type -->
+        <div class="flex flex-col">
+            <label for="id_pesticide_type" class="text-lg font-medium text-gray-700 mb-2">Pesticide Type</label>
+            {{ form.pesticide_type }}
+        </div>
+
+        <!-- Unit of Measure -->
+        <div class="flex flex-col">
+            <label for="id_unit_of_measure" class="text-lg font-medium text-gray-700 mb-2">Unit of Measure</label>
+            {{ form.unit_of_measure }}
+        </div>
+
+        <!-- Application Instructions -->
+        <div class="flex flex-col">
+            <label for="id_application_instructions" class="text-lg font-medium text-gray-700 mb-2">Application Instructions</label>
+            {{ form.application_instructions }}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-6 text-center">
+            <button type="submit" class="bg-emerald-600 text-white py-3 px-6 rounded-lg shadow hover:bg-emerald-700 transition-all duration-300">
+                Add Pesticide
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+from django.urls import path
+from . import views
+
+app_name = 'resources'
+
+urlpatterns = [
+    path('add-equipment/', views.add_equipment, name='add_equipment'),
+    path('equipment-list/', views.equipment_list, name='equipment_list'),
+    path('add-seed/', views.seed_add, name='seed_add'),
+    path('seeds-list/', views.seed_list, name='seed_list'),
+    path('seeds/<int:pk>/increase/', views.increase_seed_quantity, name='increase_seed_quantity'),
+    path('seeds/<int:pk>/decrease/', views.decrease_seed_quantity, name='decrease_seed_quantity'),
+    path('seed_usage/add/<int:field_id>/<int:seed_id>/', views.add_seed_usage, name='add_seed_usage'),
+    path('equipment/<int:pk>/', views.equipment_detail, name='equipment_detail'),
+    path('maintenance/<int:pk>/', views.add_maintenance_record, name='add_maintenance_record'),
+    path('add_fertilizer/', views.add_fertilizer, name='add_fertilizer'),
+    path('fertilizer_list/', views.fertilizer_list, name='fertilizer_list'),
+    path('fertilizers/<int:pk>/increase/', views.increase_fertilizer_quantity, name='increase_fertilizer'),
+    path('fertilizers/<int:pk>/decrease/', views.decrease_fertilizer_quantity, name='decrease_fertilizer'),
+    path('fertilizer/add/<int:field_id>/', views.add_fertilizer_usage, name='add_fertilizer_usage'),
+    path('add-pesticide/', views.add_pesticide, name='add_pesticide'),
+    path('pesticides-list/', views.pesticide_list, name='pesticide_list'),
+    path('pesticides/increase_quantity/<int:pesticide_id>/', views.increase_quantity_pesticide, name='increase_quantity_pesticide'),
+    path('pesticides/decrease_quantity/<int:pesticide_id>/', views.decrease_quantity_pesticide, name='decrease_quantity_pesticide'),
+    path('pesticides/usage/add/<int:field_id>/', views.add_pesticide_usage, name='add_pesticide_usage'),
+    path('add-feed/', views.add_feed, name='add_feed'),
+    path('feed-list/', views.feed_list, name='feed_list'), 
+    path('increase_quantity/<int:feed_id>/', views.increase_quantity, name='increase_quantity'),
+    path('decrease_quantity/<int:feed_id>/', views.decrease_quantity, name='decrease_quantity'),
+    path('feed-report/add/<int:pk>', views.add_feed_report, name='add_feed_report'),
+]

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-2xl mt-10">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-extrabold text-emerald-700 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-500" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M18 10c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zm-8 3a1 1 0 100-2 1 1 0 000 2zm1-9H9v6h2V4z" />
+            </svg>
+            Add Vaccination Record for <span class="text-gray-800">{{ livestock.name }}</span>
+        </h1>
+        <a href="{% url 'livestock:livestock_detail' livestock.id %}" class="text-sm text-gray-500 hover:text-gray-700 transition">← Back</a>
+    </div>
+
+    <form method="post" class="space-y-6 animate-fade-in">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {% for field in form %}
+                <div id="field-{{ field.name }}" class="{% if field.name == 'custom_vaccination_name' %}hidden{% endif %}">
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="pt-4">
+            <button type="submit" class="w-full bg-emerald-600 text-white font-semibold py-2 rounded-lg shadow hover:bg-emerald-700 transition-all duration-300">
+                Save Record
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const vaccinationSelect = document.getElementById("id_vaccination_name");
+        const customFieldDiv = document.getElementById("field-custom_vaccination_name");
+
+        function toggleCustomVaccField() {
+            if (vaccinationSelect.value === "OTHER") {
+                customFieldDiv.classList.remove("hidden");
+            } else {
+                customFieldDiv.classList.add("hidden");
+            }
+        }
+
+        vaccinationSelect.addEventListener("change", toggleCustomVaccField);
+        toggleCustomVaccField(); // initial state on load
+    });
+</script>
+{% endblock %}

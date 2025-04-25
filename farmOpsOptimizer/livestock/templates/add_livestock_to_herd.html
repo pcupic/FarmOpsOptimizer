@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
+    <h1 class="text-2xl font-bold text-emerald-600 mb-4">Add Livestock to {{ herd.name }}</h1>
+
+    {% if available_livestock %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {% for animal in available_livestock %}
+                <div class="bg-white border rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow duration-200">
+                    <a href="{% url 'livestock:livestock_detail' animal.id %}" class="block mb-4">
+                        <h3 class="text-xl font-semibold text-emerald-600">{{ animal.name }}</h3>
+                        <p class="text-sm text-gray-600">{{ animal.breed }} | {{ animal.gender }}</p>
+                    </a>
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" name="livestock" value="{{ animal.id }}" class="accent-emerald-500">
+                        <label class="text-gray-700">Select</label>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="bg-emerald-500 text-white px-4 py-2 rounded mt-4 hover:bg-emerald-600">Add Selected</button>
+        </form>
+    {% else %}
+        <p class="text-gray-500 italic">No available livestock for this herd.</p>
+    {% endif %}
+</div>
+{% endblock %}

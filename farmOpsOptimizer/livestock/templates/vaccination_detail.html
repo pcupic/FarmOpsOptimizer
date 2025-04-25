@@ -1,0 +1,27 @@
+<!-- templates/livestock/vaccination_detail.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-xl rounded-2xl">
+    <div class="mb-6">
+        <a href="{% url 'livestock:livestock_list' %}" class="text-blue-600 hover:text-blue-800">&larr; Back to Livestock List</a>
+    </div>
+
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-3xl font-bold text-gray-800 tracking-tight">{{ vaccination.livestock.name }} - Vaccination Details</h2>
+    </div>
+
+    <div class="space-y-6">
+        <div>
+            <p class="text-xl font-semibold text-gray-700">Vaccination Name: {{ vaccination.vaccination_name }}</p>
+            <p class="text-lg text-gray-600">Date of Vaccination: {{ vaccination.vaccination_date|date:"F j, Y" }}</p>
+            <p class="text-lg text-gray-600">Next Due Date: {{ vaccination.next_due_date|date:"F j, Y" }}</p>
+            <p class="text-lg text-gray-600">Cost of Vaccine: ${{ vaccination.cost_of_vaccine }}</p>
+            {% if vaccination.custom_vaccination_name %}
+                <p class="text-lg text-gray-600">Custom Vaccine Name: {{ vaccination.custom_vaccination_name }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

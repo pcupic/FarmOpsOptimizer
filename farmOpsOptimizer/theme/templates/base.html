@@ -1,0 +1,119 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}FarmOps Optimizer{% endblock title %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% tailwind_css %}
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .nav-link {
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        .nav-link:hover {
+            transform: scale(1.1);
+            background-color: white;
+            color: black;
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white !important;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        .navbar-brand:hover {
+            transform: scale(1.1);
+            color: white !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans bg-gray-100 text-gray-800">
+
+    <!-- NAVBAR -->
+    <header class="bg-emerald-800 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="navbar-brand tracking-wide">FarmOps Optimizer</div>
+
+			
+            <nav class="flex items-center space-x-6 text-sm">
+				{% if request.user.is_staff %}
+					<a href="/admin/" class="nav-link px-2 py-1 rounded">Admin Panel</a>
+				{% endif %}
+
+				<div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="nav-link px-2 py-1 rounded">Fields</button>
+                    <div x-show="open" @click.away="open = false"
+                         class="absolute mt-2 bg-white text-gray-800 rounded shadow-md z-10 min-w-[150px]">
+                        <a href="{% url 'crops:fields' %}" class="block px-4 py-2 hover:bg-gray-100">Planting Fields</a>
+                        <a href="{% url 'crops:grazing_field_list' %}" class="block px-4 py-2 hover:bg-gray-100">Grazing Fields</a>
+                    </div>
+                </div>
+			
+                <!-- Crops Dropdown -->
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="nav-link px-2 py-1 rounded">Crops</button>
+                    <div x-show="open" @click.away="open = false"
+                         class="absolute mt-2 bg-white text-gray-800 rounded shadow-md z-10 min-w-[150px]">
+                        <a href="{% url 'crops:crops' %}" class="block px-4 py-2 hover:bg-gray-100">All Crops</a>
+                    </div>
+                </div>
+
+                <!-- Livestock Dropdown -->
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="nav-link px-2 py-1 rounded">Livestock</button>
+                    <div x-show="open" @click.away="open = false"
+                         class="absolute mt-2 bg-white text-gray-800 rounded shadow-md z-10 min-w-[160px]">
+                        <a href="{% url 'livestock:livestock_list' %}" class="block px-4 py-2 hover:bg-gray-100">All Livestock</a>
+                        <a href="{% url 'livestock:species_list' %}" class="block px-4 py-2 hover:bg-gray-100">All Species</a>
+						<a href="{% url 'livestock:herd_list' %}" class="block px-4 py-2 hover:bg-gray-100">All Herds</a>
+						{% if request.user.is_staff %}
+							<a href="{% url 'livestock:pending_species_list' %}" class="block px-4 py-2 hover:bg-gray-100">Pending Species</a>
+						{% endif %}
+					</div>
+                </div>
+
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="nav-link px-2 py-1 rounded">Resources</button>
+                    <div x-show="open" @click.away="open = false"
+                         class="absolute mt-2 bg-white text-gray-800 rounded shadow-md z-10 min-w-[160px]">
+                        <a href="{% url 'resources:equipment_list' %}" class="block px-4 py-2 hover:bg-gray-100">Equipment</a>
+						<a href="{% url 'resources:seed_list' %}" class="block px-4 py-2 hover:bg-gray-100">Seeds</a>
+						<a href="{% url 'resources:fertilizer_list' %}" class="block px-4 py-2 hover:bg-gray-100">Fertilizers</a>
+                        <a href="{% url 'resources:pesticide_list' %}" class="block px-4 py-2 hover:bg-gray-100">Pesticides</a>
+                        <a href="{% url 'resources:feed_list' %}" class="block px-4 py-2 hover:bg-gray-100">Food</a>
+                    </div>
+                </div>
+                <a href="{% url 'tasks:task_list' %}" class="nav-link px-2 py-1 rounded">Tasks</a>
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="nav-link px-2 py-1 rounded">Finance</button>
+                    <div x-show="open" @click.away="open = false"
+                         class="absolute mt-2 bg-white text-gray-800 rounded shadow-md z-10 min-w-[160px]">
+                        <a href="{% url 'finance:summary' %}" class="block px-4 py-2 hover:bg-gray-100">Planting Fields</a>   
+                        <a href="{% url 'finance:livestock_costs' %}" class="block px-4 py-2 hover:bg-gray-100">Livestock Health Costs</a>
+                        <a href="{% url "finance:resource_assets" %}" class="block px-4 py-2 hover:bg-gray-100">Resource Assets</a>
+                    </div>
+                </div>
+
+                {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link px-2 py-1 rounded">Logout</button>
+                </form>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+</body>
+</html>

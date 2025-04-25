@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-2xl mt-10 animate-fade-in">
+    <h2 class="text-3xl font-extrabold text-emerald-700 mb-6 text-center">
+        Add Fertilizer
+    </h2>
+
+    <form method="POST" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Fertilizer Name -->
+        <div class="flex flex-col">
+            <label for="id_name" class="text-sm font-medium text-gray-700 mb-1">Fertilizer Name:</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ form.name.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Quantity -->
+        <div class="flex flex-col">
+            <label for="id_quantity" class="text-sm font-medium text-gray-700 mb-1">Quantity:</label>
+            {{ form.quantity }}
+            {% if form.quantity.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ form.quantity.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Price per Unit -->
+        <div class="flex flex-col">
+            <label for="id_price_per_unit" class="text-sm font-medium text-gray-700 mb-1">Price per Unit (€):</label>
+            {{ form.price_per_unit }}
+            {% if form.price_per_unit.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ form.price_per_unit.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Fertilizer Type -->
+        <div class="flex flex-col">
+            <label for="id_fertilizer_type" class="text-sm font-medium text-gray-700 mb-1">Fertilizer Type:</label>
+            {{ form.fertilizer_type }}
+            {% if form.fertilizer_type.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ form.fertilizer_type.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Unit of Measure -->
+        <div class="flex flex-col">
+            <label for="id_unit_of_measure" class="text-sm font-medium text-gray-700 mb-1">Unit of Measure:</label>
+            {{ form.unit_of_measure }}
+            {% if form.unit_of_measure.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ form.unit_of_measure.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Application Instructions -->
+        <div class="flex flex-col">
+            <label for="id_application_instructions" class="text-sm font-medium text-gray-700 mb-1">Application Instructions:</label>
+            {{ form.application_instructions }}
+            {% if form.application_instructions.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ form.application_instructions.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <div class="flex justify-end mt-6">
+            <button type="submit" class="bg-emerald-600 text-white py-3 px-6 rounded-lg shadow hover:bg-emerald-700 transition-all duration-300">
+                Add Fertilizer
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-xl rounded-2xl">
+    <div class="mb-6">
+        <a href="{% url 'livestock:livestock_list' %}" class="text-blue-600 hover:text-blue-800">&larr; Back to Livestock List</a>
+    </div>
+
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-3xl font-bold text-gray-800 tracking-tight">{{ livestock.name }} Overview</h2>
+
+        <!-- Gumbi za Edit i Delete -->
+        <div class="flex space-x-4">
+            <a href="{% url 'livestock:edit_livestock' livestock.id %}" class="text-indigo-600 hover:text-indigo-800 text-lg font-medium">Edit</a>
+            <a href="{% url 'livestock:delete_livestock' livestock.id %}" class="text-red-600 hover:text-red-800 text-lg font-medium">Delete</a>
+        </div>
+    </div>
+
+    <div class="space-y-6">
+        <div>
+            <p class="text-xl font-semibold text-gray-700">Species: {{ livestock.species.name }}</p>
+            <p class="text-lg text-gray-600">Breed: {{ livestock.breed }}</p>
+            <p class="text-lg text-gray-600">Gender: {{ livestock.gender }}</p>
+            <p class="text-lg text-gray-600">Date of Birth: {{ livestock.birth_date|date:"F j, Y" }}</p>
+            <p class="text-lg text-gray-600">Health Status: 
+                {% if latest_health_record %}
+                    <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full shadow-sm">{{ latest_health_record.health_status }}</span>
+                {% else %}
+                    <span class="text-gray-500">No health record available</span>
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Tabs -->
+        <div x-data="{ tab: 'health' }" class="mt-8">
+            <div class="flex space-x-4 border-b border-gray-200 mb-4">
+                <button @click="tab = 'health'"
+                        :class="{ 'border-b-2 border-blue-600 text-blue-600': tab === 'health' }"
+                        class="pb-2 px-4 text-gray-700 hover:text-blue-600 font-medium">
+                    Health Records
+                </button>
+                <button @click="tab = 'vaccination'"
+                        :class="{ 'border-b-2 border-blue-600 text-blue-600': tab === 'vaccination' }"
+                        class="pb-2 px-4 text-gray-700 hover:text-blue-600 font-medium">
+                    Vaccination Records
+                </button>
+            </div>
+
+            <!-- Health Records Tab -->
+            <div x-show="tab === 'health'" x-cloak>
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-semibold text-gray-700">Health Records</h3>
+                    <a href="{% url 'livestock:add_health_record' livestock.id %}" class="text-green-600 hover:text-green-800 text-2xl font-bold">+</a>
+                </div>
+                <ul class="space-y-2 mt-2">
+                    {% for record in livestock.health_records.all %}
+                        <li class="py-2">
+                            <a href="{% url 'livestock:health_record_detail' record.id %}" class="block p-4 bg-gray-100 shadow-lg rounded-lg hover:bg-gray-200 transition-all">
+                                <p class="text-sm text-gray-500">Status: {{ record.health_status }}</p>
+                                <p class="text-sm text-gray-500">Description: {{ record.description }}</p>
+                                <p class="text-sm text-gray-500">Date Recorded: {{ record.date_recorded|date:"F j, Y" }}</p>
+                            </a>
+                        </li>
+                    {% empty %}
+                        <p class="text-sm text-gray-500">No health records found for this livestock.</p>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Vaccination Records Tab -->
+            <div x-show="tab === 'vaccination'" x-cloak>
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-semibold text-gray-700">Vaccination Records</h3>
+                    <a href="{% url 'livestock:add_vaccination_record' livestock.id %}" class="text-green-600 hover:text-green-800 text-2xl font-bold">+</a>
+                </div>
+                <div class="space-y-2 mt-2">
+                    {% for vaccination in livestock.vaccination_records.all %}
+                        <a href="{% url 'livestock:vaccination_detail' vaccination.id %}" class="block bg-white rounded-lg shadow-lg p-4 hover:bg-gray-50 transition duration-200">
+                            <div class="space-y-1">
+                                <p class="text-lg font-semibold text-gray-800">Vaccine: {{ vaccination.vaccination_name }}</p>
+                                <p class="text-sm text-gray-500">Date: {{ vaccination.vaccination_date|date:"F j, Y" }}</p>
+                                <p class="text-sm text-gray-500">Next Due: {{ vaccination.next_due_date|date:"F j, Y" }}</p>
+                            </div>
+                        </a>
+                    {% empty %}
+                        <p class="text-sm text-gray-500">No vaccination records found for this livestock.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        {% if livestock.herd.id %}
+        <div class="mt-6">
+            <a href="{% url 'livestock:herd_detail' livestock.herd.id %}" class="text-blue-600 hover:text-blue-800">
+                ← Back to Herd Detail
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

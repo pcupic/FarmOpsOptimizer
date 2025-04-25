@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-emerald-700">Equipment Details</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-gray-600">Name:</p>
+        <p class="font-medium text-lg">{{ equipment.name }}</p>
+      </div>
+      <div>
+        <p class="text-gray-600">Condition:</p>
+        <p class="font-medium">{{ equipment.get_condition_display }}</p>
+      </div>
+      <div>
+        <p class="text-gray-600">Value (€):</p>
+        <p class="font-medium">€{{ equipment.value }}</p>
+      </div>
+      <div>
+        <p class="text-gray-600">Last Maintenance Date:</p>
+        <p class="font-medium">
+          {{ equipment.last_maintenance_date|date:"Y-m-d H:i" }}
+        </p>
+      </div>
+      <div>
+        <p class="text-gray-600">Purchase Date:</p>
+        <p class="font-medium">{{ equipment.purchase_date|date:"Y-m-d" }}</p>
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <h3 class="text-xl font-semibold text-emerald-600">Maintenance Records</h3>
+
+      <div class="mt-4">
+        {% if maintenance_records %}
+          <ul>
+            {% for record in maintenance_records %}
+              <li class="flex justify-between py-2 border-b">
+                <span class="text-gray-600">
+                  {{ record.date|date:"Y-m-d H:i" }} - {{ record.description }}
+                </span>
+                <span class="text-gray-600">Cost: €{{ record.cost }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-gray-600">No maintenance records available.</p>
+        {% endif %}
+      </div>
+
+      <div class="mt-4">
+        <a href="{% url 'resources:add_maintenance_record' equipment.id %}" class="text-emerald-600 hover:underline">
+          Add Maintenance Record
+        </a>
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <a href="{% url 'resources:equipment_list' %}" class="text-emerald-600 hover:underline">← Back to list</a>
+    </div>
+  </div>
+{% endblock %}

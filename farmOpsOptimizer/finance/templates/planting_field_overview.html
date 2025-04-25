@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto p-6 sm:p-8">
+    <h2 class="text-3xl font-extrabold mb-8 text-green-700">🌾 Financial Overview by Planting Field</h2>
+
+    {% for data in fields_data %}
+        <details class="bg-white shadow-md rounded-lg mb-6">
+            <summary
+                class="cursor-pointer p-5 font-semibold text-lg hover:bg-gray-100 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200">
+                <span class="truncate max-w-xs">{{ data.field.name }}</span>
+                <span class="{% if data.net_profit_loss < 0 %}text-red-600{% else %}text-green-600{% endif %} font-bold">
+                    €{{ data.net_profit_loss }}
+                </span>
+            </summary>
+            <div class="p-5 border-t text-sm">
+                <!-- Harvest Summaries Section -->
+                {% if data.harvest_summaries %}
+                    <div class="overflow-x-auto mb-6">
+                        <table class="min-w-full border border-gray-200 divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Season</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Yield (t)</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue (€)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {% for summary in data.harvest_summaries %}
+                                <tr class="hover:bg-green-50 transition duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap text-gray-900">{{ summary.season }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-gray-700">{{ summary.yield_in_tons }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right font-semibold text-green-600">€{{ summary.total_revenue }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Chart Container -->
+                    <div>
+                        <canvas id="chart-{{ forloop.counter }}" class="w-full max-w-4xl h-64 mx-auto"></canvas>
+                    </div>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const ctx{{ forloop.counter }} = document.getElementById('chart-{{ forloop.counter }}').getContext('2d');
+
+                            const chartData{{ forloop.counter }} = {
+                                labels: [{% for summary in data.harvest_summaries %}'{{ summary.season }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+                                datasets: [{
+                                    label: 'Revenue (€)',
+                                    data: [{% for summary in data.harvest_summaries %}{{ summary.total_revenue }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+                                    backgroundColor: 'rgba(34, 197, 94, 0.5)',
+                                    borderColor: 'rgba(34, 197, 94, 1)',
+                                    borderWidth: 1
+                                }]
+                            };
+
+                            const chartOptions{{ forloop.counter }} = {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(tooltipItem) {
+                                                return '€' + tooltipItem.raw;
+                                            }
+                                        }
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            callback: function(value) {
+                                                return '€' + value;
+                                            }
+                                        }
+                                    }
+                                }
+                            };
+
+                            new Chart(ctx{{ forloop.counter }}, {
+                                type: 'bar',
+                                data: chartData{{ forloop.counter }},
+                                options: chartOptions{{ forloop.counter }}
+                            });
+                        });
+                    </script>
+                {% else %}
+                    <p class="text-gray-500 italic">No harvest data available.</p>
+                {% endif %}
+
+                <!-- Always Display Costs and Usages -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-gray-700">Costs Overview</h3>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><strong>Seed Cost:</strong> €{{ data.total_seed_cost }}</li>
+                        <li><strong>Fertilizer Cost:</strong> €{{ data.total_fertilizer_cost }}</li>
+                        <li><strong>Pesticide Cost:</strong> €{{ data.total_pesticide_cost }}</li>
+                    </ul>
+
+                    <!-- Detailed Usages -->
+                    <div class="mt-4">
+                        <h4 class="text-md font-semibold text-gray-700">Detailed Usage Information</h4>
+
+                        <!-- Seed Usages -->
+                        {% if data.seed_usages %}
+                        <div class="mt-4">
+                            <h5 class="text-sm font-medium text-gray-600">Seed Usages</h5>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                {% for seed_usage in data.seed_usages %}
+                                <li>
+                                    <span class="font-semibold">{{ seed_usage.seed.name }}</span>: 
+                                    {{ seed_usage.quantity_used }} units at €{{ seed_usage.seed.price_per_unit }} per unit
+                                    <strong>(Total Cost: €{{ seed_usage.quantity_used|multiply:seed_usage.seed.price_per_unit }})</strong>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        <!-- Fertilizer Usages -->
+                        {% if data.fertilizer_usages %}
+                        <div class="mt-4">
+                            <h5 class="text-sm font-medium text-gray-600">Fertilizer Usages</h5>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                {% for fertilizer_usage in data.fertilizer_usages %}
+                                <li>
+                                    <span class="font-semibold">{{ fertilizer_usage.fertilizer.name }}</span>: 
+                                    {{ fertilizer_usage.amount_used }} units at €{{ fertilizer_usage.fertilizer.price_per_unit }} per unit
+                                    <strong>(Total Cost: €{{ fertilizer_usage.amount_used|multiply:fertilizer_usage.fertilizer.price_per_unit }})</strong>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        <!-- Pesticide Usages -->
+                        {% if data.pesticide_usages %}
+                        <div class="mt-4">
+                            <h5 class="text-sm font-medium text-gray-600">Pesticide Usages</h5>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                {% for pesticide_usage in data.pesticide_usages %}
+                                <li>
+                                    <span class="font-semibold">{{ pesticide_usage.pesticide.name }}</span>: 
+                                    {{ pesticide_usage.quantity_used }} units at €{{ pesticide_usage.pesticide.price_per_unit }} per unit
+                                    <strong>(Total Cost: €{{ pesticide_usage.quantity_used|multiply:pesticide_usage.pesticide.price_per_unit }})</strong>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </details>
+    {% empty %}
+        <p class="text-gray-600 italic">No planting fields available.</p>
+    {% endfor %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-2xl mt-10">
+    <h1 class="text-3xl font-extrabold text-emerald-700">
+        Planting Report for {{ planting_report.planting_field.name }}
+    </h1>
+    <p class="text-lg mt-4">Report Date: {{ planting_report.report_date|date:"F j, Y" }}</p>
+    <p class="text-lg mt-2">Plant Height: {{ planting_report.plant_height }}</p>
+    <p class="text-lg mt-2">Plant Health: {{ planting_report.plant_health }}</p>
+    <p class="text-lg mt-2">Flowering Status: {{ planting_report.flowering_status }}</p>
+    <p class="text-lg mt-2">Maturity Status: {{ planting_report.maturity_status }}</p>
+    <p class="text-lg mt-2">Temperature: {{ planting_report.temperature }}</p>
+    <p class="text-lg mt-2">Humidity: {{ planting_report.humidity }}</p>
+    <p class="text-lg mt-2">Notes: {{ planting_report.notes }}</p>
+
+    <div class="mt-6">
+        <a href="{% url 'crops:planting_field_detail' planting_report.planting_field.id %}" class="text-sm text-gray-500 hover:text-gray-700">← Back to Field</a>
+    </div>
+</div>
+{% endblock %}
