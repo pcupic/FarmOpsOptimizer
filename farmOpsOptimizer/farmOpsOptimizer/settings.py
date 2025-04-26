@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-4luyb!x)_&3wj3&jjpj(yq&w_fl+5u53(2zx!9hm0*5$3_sq(o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'farmopsoptimizer-production.up.railway.app',
+    'localhost',
+    '127.0.0.1',
+]
 
 # Application definition
 
