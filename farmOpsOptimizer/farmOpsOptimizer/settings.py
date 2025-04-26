@@ -145,3 +145,6 @@ NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 LOGIN_REDIRECT_URL = '/'  
 
 STATICSTORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+CSRF_TRUSTED_ORIGINS = [
+    'https://farmopsoptimizer-production.up.railway.app',
+]
