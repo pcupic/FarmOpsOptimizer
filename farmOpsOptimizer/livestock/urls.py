@@ -4,7 +4,7 @@ from . import views
 app_name = 'livestock'
 
 urlpatterns = [
-    path('', views.livestock_list, name='livestock_list'),
+    path('livestock-list/', views.livestock_list, name='livestock_list'),
     path('livestock/add/', views.add_livestock, name='add_livestock'),
     path('health/add/', views.add_health_record, name='add_health_record'),
     path('vaccination/add/', views.add_vaccination_record, name='add_vaccination_record'),
