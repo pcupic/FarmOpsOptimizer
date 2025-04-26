@@ -51,7 +51,6 @@ class TaskForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'border border-gray-300 p-3 rounded-md'
 
-        # Format datetime fields to match datetime-local input
         datetime_fields = ['start_date', 'due_date', 'completion_date']
         for field in datetime_fields:
             if self.instance and getattr(self.instance, field):

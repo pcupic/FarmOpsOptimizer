@@ -28,6 +28,7 @@
                     <th class="py-3 px-4 border-b border-gray-200 text-center">Quantity</th>
                     <th class="py-3 px-4 border-b border-gray-200 text-left">Price per Unit</th>
                     <th class="py-3 px-4 border-b border-gray-200 text-left">Unit of Measure</th>
+                    <th class="py-3 px-4 border-b border-gray-200 text-left">Application Instructions</th>  
                     <th class="py-3 px-4 border-b border-gray-200 text-left">Actions</th>
                 </tr>
             </thead>
@@ -47,14 +48,18 @@
                     </td>
                     <td class="py-3 px-4 border-b border-gray-200">€{{ fertilizer.price_per_unit }}</td>
                     <td class="py-3 px-4 border-b border-gray-200">{{ fertilizer.get_unit_of_measure_display }}</td>
+                    <td class="py-3 px-4 border-b border-gray-200">{{ fertilizer.application_instructions }}</td> 
                     <td class="py-3 px-4 border-b border-gray-200">
-                        <a href="{% url 'resources:add_fertilizer' %}" class="text-blue-600 hover:underline">Edit</a> |
-                        <a href="#" class="text-red-600 hover:underline">Delete</a>
+                        <a href="{% url 'resources:edit_fertilizer' fertilizer.id %}" class="text-blue-600 hover:underline">Edit</a> |
+                        <form action="{% url 'resources:delete_fertilizer' fertilizer.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                        </form>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="py-4 px-4 text-center text-gray-500">No fertilizers found.</td>
+                    <td colspan="7" class="py-4 px-4 text-center text-gray-500">No fertilizers found.</td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -28,7 +28,7 @@ def seed_add(request):
             seed = form.save(commit=False)
             seed.user = request.user
             seed.save()
-            return redirect('resources:seed_add')  
+            return redirect('resources:seed_list')  
     else:
         form = SeedForm()
     return render(request, 'add_seed.html', {'form': form})
@@ -53,7 +53,7 @@ def decrease_seed_quantity(request, pk):
 def add_seed_usage(request, field_id, seed_id):
     field = PlantingField.objects.get(id=field_id)
     crop = field.crop
-    seed = get_object_or_404(Seed, crop=crop)  # filtriraj po cropu
+    seed = get_object_or_404(Seed, crop=crop)  
 
     if request.method == 'POST':
         form = SeedUsageForm(request.POST, crop=crop)
@@ -142,7 +142,6 @@ def add_fertilizer_usage(request, field_id):
                 usage.field = field
                 usage.save()
 
-                # Subtract used amount from fertilizer stock
                 fertilizer.quantity -= amount_used
                 fertilizer.save()
 
@@ -177,14 +176,14 @@ def pesticide_list(request):
 
 def increase_quantity_pesticide(request, pesticide_id):
     pesticide = get_object_or_404(Pesticide, id=pesticide_id)
-    pesticide.quantity += 1  # Increase the quantity by 1
+    pesticide.quantity += 1 
     pesticide.save()
     return redirect('resources:pesticide_list')
 
 def decrease_quantity_pesticide(request, pesticide_id):
     pesticide = get_object_or_404(Pesticide, id=pesticide_id)
     if pesticide.quantity > 0:
-        pesticide.quantity -= 1  # Decrease the quantity by 1, ensuring it doesn't go below zero
+        pesticide.quantity -= 1  
         pesticide.save()
     return redirect('resources:pesticide_list')
 
@@ -192,7 +191,7 @@ def add_pesticide_usage(request, field_id):
     field = get_object_or_404(PlantingField, id=field_id)
 
     if request.method == 'POST':
-        form = PesticideUsageForm(request.POST, user=request.user)  # Pass the current user to the form
+        form = PesticideUsageForm(request.POST, user=request.user) 
         if form.is_valid():
             pesticide = form.cleaned_data['pesticide']
             quantity_used = form.cleaned_data['quantity_used']
@@ -204,14 +203,13 @@ def add_pesticide_usage(request, field_id):
                 usage.field = field
                 usage.save()
 
-                # Subtract the used quantity from pesticide stock
                 pesticide.quantity -= quantity_used
                 pesticide.save()
 
-                return redirect('crops:planting_field_detail', field_id)  # Redirect to the pesticide usage list page
+                return redirect('crops:planting_field_detail', field_id)  
 
     else:
-        form = PesticideUsageForm(user=request.user)  # Pass the current user to the form
+        form = PesticideUsageForm(user=request.user)  
 
     return render(request, 'add_pesticide_usage.html', {
         'form': form,
@@ -225,28 +223,27 @@ def add_feed(request):
             feed = form.save(commit=False)
             feed.user = request.user
             feed.save()
-            return redirect('resources:feed_list')  # Redirect to a success page or back to the form
+            return redirect('resources:feed_list')  
     else:
         form = FeedForm()
 
     return render(request, 'add_feed.html', {'form': form})
 
 def feed_list(request):
-    # Fetch all Feed entries
     feeds = Feed.objects.filter(user=request.user)
     
     return render(request, 'feed_list.html', {'feeds': feeds})
 
 def increase_quantity(request, feed_id):
     feed = Feed.objects.get(id=feed_id)
-    feed.quantity += 1  # Increase quantity by 1 (you can adjust this to any increment)
+    feed.quantity += 1  
     feed.save()
     return redirect('resources:feed_list')
 
 def decrease_quantity(request, feed_id):
     feed = Feed.objects.get(id=feed_id)
     if feed.quantity > 0:
-        feed.quantity -= 1  # Decrease quantity by 1 (you can adjust this to any decrement)
+        feed.quantity -= 1  
         feed.save()
     return redirect('resources:feed_list')
 
@@ -277,3 +274,101 @@ def add_feed_report(request, pk):
         'form': form,
         'grazing_field': grazing_field, 
     })
+
+def edit_equipment(request, id):
+    equipment = get_object_or_404(Equipment, id=id)  
+    if request.method == 'POST':
+        form = EquipmentForm(request.POST, instance=equipment)  
+        if form.is_valid():
+            form.save()  
+            return redirect('resources:equipment_detail', id) 
+    else:
+        form = EquipmentForm(instance=equipment)
+    return render(request, 'edit_equipment.html', {'form': form, 'equipment': equipment})
+
+def delete_equipment(request, id):
+    equipment = get_object_or_404(Equipment, id=id)  
+    if request.method == 'POST':
+        equipment.delete() 
+        return redirect('resources:equipment_list') 
+    
+
+def edit_seed(request, pk):
+    seed = get_object_or_404(Seed, pk=pk)
+    if request.method == "POST":
+        form = SeedForm(request.POST, instance=seed)
+        if form.is_valid():
+            form.save()
+            return redirect('resources:seed_list')  
+    else:
+        form = SeedForm(instance=seed)
+    return render(request, 'edit_seed.html', {'form': form, 'seed': seed})
+
+def delete_seed(request, pk):
+    seed = get_object_or_404(Seed, pk=pk)
+    
+    if request.method == "POST":
+        seed.delete()   
+    return redirect('resources:seed_list') 
+
+def edit_fertilizer(request, id):
+    fertilizer = get_object_or_404(Fertilizer, id=id)
+    
+    if request.method == 'POST':
+        form = FertilizerForm(request.POST, instance=fertilizer)
+        if form.is_valid():
+            form.save()
+            return redirect('resources:fertilizer_list')  
+    else:
+        form = FertilizerForm(instance=fertilizer) 
+    
+    return render(request, 'edit_fertilizer.html', {'form': form, 'fertilizer': fertilizer})
+
+def delete_fertilizer(request, id):
+    fertilizer = get_object_or_404(Fertilizer, id=id)
+
+    if request.method == 'POST':
+        fertilizer.delete()
+    return redirect('resources:fertilizer_list') 
+
+def edit_pesticide(request, id):
+    pesticide = get_object_or_404(Pesticide, id=id)
+
+    if request.method == 'POST':
+        form = PesticideForm(request.POST, instance=pesticide)
+        if form.is_valid():
+            form.save()
+            return redirect('resources:pesticide_list')  
+    else:
+        form = PesticideForm(instance=pesticide) 
+
+    return render(request, 'edit_pesticide.html', {'form': form, 'pesticide': pesticide})
+
+def delete_pesticide(request, id):
+    pesticide = get_object_or_404(Pesticide, id=id)
+
+    if request.method == 'POST':
+        pesticide.delete()
+    return redirect('resources:pesticide_list')  
+    
+def edit_feed(request, id):
+    feed = get_object_or_404(Feed, id=id)
+
+    if request.method == 'POST':
+        form = FeedForm(request.POST, instance=feed)
+        if form.is_valid():
+            form.save()
+            return redirect('resources:feed_list')
+    else:
+        form = FeedForm(instance=feed)
+
+    return render(request, 'edit_feed.html', {'form': form})
+
+def delete_feed(request, id):
+    feed = get_object_or_404(Feed, id=id)
+
+    if request.method == 'POST':
+        feed.delete()
+    return redirect('resources:feed_list')
+
+

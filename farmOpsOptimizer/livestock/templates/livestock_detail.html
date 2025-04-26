@@ -10,7 +10,6 @@
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-3xl font-bold text-gray-800 tracking-tight">{{ livestock.name }} Overview</h2>
 
-        <!-- Gumbi za Edit i Delete -->
         <div class="flex space-x-4">
             <a href="{% url 'livestock:edit_livestock' livestock.id %}" class="text-indigo-600 hover:text-indigo-800 text-lg font-medium">Edit</a>
             <a href="{% url 'livestock:delete_livestock' livestock.id %}" class="text-red-600 hover:text-red-800 text-lg font-medium">Delete</a>
@@ -32,7 +31,6 @@
             </p>
         </div>
 
-        <!-- Tabs -->
         <div x-data="{ tab: 'health' }" class="mt-8">
             <div class="flex space-x-4 border-b border-gray-200 mb-4">
                 <button @click="tab = 'health'"
@@ -47,7 +45,6 @@
                 </button>
             </div>
 
-            <!-- Health Records Tab -->
             <div x-show="tab === 'health'" x-cloak>
                 <div class="flex items-center justify-between">
                     <h3 class="text-xl font-semibold text-gray-700">Health Records</h3>
@@ -68,7 +65,6 @@
                 </ul>
             </div>
 
-            <!-- Vaccination Records Tab -->
             <div x-show="tab === 'vaccination'" x-cloak>
                 <div class="flex items-center justify-between">
                     <h3 class="text-xl font-semibold text-gray-700">Vaccination Records</h3>

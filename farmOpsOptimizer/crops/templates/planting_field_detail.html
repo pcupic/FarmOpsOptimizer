@@ -22,7 +22,6 @@
     </div>
 
     <div class="space-y-6">
-        <!-- Field Info -->
         <div>
             <p class="text-xl font-semibold text-gray-700">Area: {{ planting_field.area }} m²</p>
             <p class="text-lg text-gray-600">Soil Type: {{ planting_field.get_soil_type_display }}</p>
@@ -40,7 +39,6 @@
             </form>
         </div>
 
-        <!-- Reports Tabs -->
         <div>
             <div class="flex space-x-4 border-b border-gray-200 mb-4">
                 <button id="tab-active" class="px-4 py-2 text-blue-600 border-b-2 border-blue-600 font-semibold focus:outline-none">Active Reports</button>
@@ -51,7 +49,6 @@
                 <button id="tab-pesticide-usage" class="px-4 py-2 text-gray-500 hover:text-blue-600 focus:outline-none">Pesticide Usage</button> <!-- New tab button -->
             </div>
 
-            <!-- Active Reports -->
             <div id="active-reports">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="text-xl font-semibold text-gray-700">Planting Reports</h3>
@@ -71,7 +68,6 @@
                 </ul>
             </div>
 
-            <!-- Archived Reports -->
             <div id="archived-reports" class="hidden">
                 <h3 class="text-xl font-semibold text-gray-700 mb-2">Archived Reports</h3>
                 <ul class="space-y-2">
@@ -88,7 +84,6 @@
                 </ul>
             </div>
 
-            <!-- Harvest Summary -->
             <div id="harvest-summary" class="hidden">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="text-xl font-semibold text-gray-700">Harvest Summary</h3>
@@ -107,7 +102,6 @@
                 {% endfor %}
             </div>
 
-            <!-- Seed Usage -->
             <div id="seed-usage" class="hidden">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="text-xl font-semibold text-gray-700">Seed Usage</h3>
@@ -128,7 +122,6 @@
                 </ul>
             </div>
 
-            <!-- Fertilizer Usage -->
             <div id="fertilizer-usage" class="hidden">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="text-xl font-semibold text-gray-700">Fertilizer Usage</h3>
@@ -149,7 +142,6 @@
                 </ul>
             </div>
 
-            <!-- Pesticide Usage -->
             <div id="pesticide-usage" class="hidden">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="text-xl font-semibold text-gray-700">Pesticide Usage</h3>
@@ -174,7 +166,6 @@
 </div>
 
 <script>
-    // JavaScript for tab switching functionality
     const tabs = [
         { tabId: 'tab-active', sectionId: 'active-reports' },
         { tabId: 'tab-archived', sectionId: 'archived-reports' },
@@ -189,13 +180,10 @@
         const sectionElement = document.getElementById(tab.sectionId);
 
         tabElement.addEventListener('click', () => {
-            // Hide all sections
             tabs.forEach(t => document.getElementById(t.sectionId).classList.add('hidden'));
 
-            // Show the clicked section
             sectionElement.classList.remove('hidden');
 
-            // Update tab styles
             tabs.forEach(t => {
                 const tabBtn = document.getElementById(t.tabId);
                 if (t.tabId === tab.tabId) {

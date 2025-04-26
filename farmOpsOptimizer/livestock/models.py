@@ -1,12 +1,6 @@
 from django.db import models
-from crops.models import PlantingField, GrazingField
+from crops.models import GrazingField
 from django.contrib.auth.models import User
-
-class Product(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
 
 class Species(models.Model):
     name = models.CharField(max_length=100)  
@@ -122,7 +116,6 @@ class Species(models.Model):
     
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='approved')
     endangered_status = models.CharField(max_length=25, choices=ENDANGERED_STATUS_CHOICES, blank=True, null=True)
-    products = models.ManyToManyField(Product, related_name='species')
 
     def __str__(self):
         return self.name

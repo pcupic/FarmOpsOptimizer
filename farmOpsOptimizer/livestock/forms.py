@@ -1,5 +1,5 @@
 from django import forms
-from .models import Livestock, HealthRecord, VaccinationRecord, Species, Herd, Product
+from .models import Livestock, HealthRecord, VaccinationRecord, Species, Herd
 from crops.models import GrazingField
 
 class LivestockForm(forms.ModelForm):
@@ -68,7 +68,7 @@ class LivestockForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)  # Get the 'user' argument, and remove it from kwargs
+        user = kwargs.pop('user', None)  
         super(LivestockForm, self).__init__(*args, **kwargs)
 
         self.fields['species'].required = True
@@ -235,22 +235,10 @@ class HerdForm(forms.ModelForm):
         }
         
     def __init__(self, *args, **kwargs):
-        user = kwargs.get('user')  # Get the current user from kwargs
+        user = kwargs.get('user') 
         super(HerdForm, self).__init__(*args, **kwargs)
         
-        # Ensure that 'field' is required and filter by current user
         self.fields['field'].required = True
-        self.fields['field'].queryset = GrazingField.objects.filter(user=user)  # Filter GrazingField by user
+        self.fields['field'].queryset = GrazingField.objects.filter(user=user)  
         
-        # Ensure that 'species' is required
         self.fields['species'].required = True
-
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = ['name']
-    
-    widgets = {
-    'name': forms.TextInput(attrs={
-        'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500'
-    })}

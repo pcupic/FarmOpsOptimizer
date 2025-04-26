@@ -51,7 +51,7 @@ class SeedUsageForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        crop = kwargs.pop('crop', None)  # crop se šalje iz view-a
+        crop = kwargs.pop('crop', None)  
         super().__init__(*args, **kwargs)
         if crop:
             self.fields['seed'].queryset = Seed.objects.filter(crop=crop)
@@ -61,7 +61,6 @@ class SeedUsageForm(forms.ModelForm):
         if quantity_used <= 0:
             raise forms.ValidationError('Quantity used must be greater than 0.')
         
-        # Dodatna validacija – quantity ne smije biti veći od stanja
         seed = self.cleaned_data.get('seed')
         if seed and quantity_used > seed.quantity:
             raise forms.ValidationError(f"Not enough seed in stock (available: {seed.quantity}).")
@@ -71,9 +70,12 @@ class SeedUsageForm(forms.ModelForm):
 class EquipmentForm(forms.ModelForm):
     class Meta:
         model = Equipment
-        fields = ['name', 'value', 'last_maintenance_date', 'purchase_date']
+        fields = ['name', 'value', 'condition','last_maintenance_date', 'purchase_date']
         widgets = {
             'name': forms.TextInput(attrs={
+                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+            }),
+            'condition': forms.Select(attrs={
                 'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
             }),
             'value': forms.NumberInput(attrs={
@@ -111,33 +113,29 @@ class FertilizerForm(forms.ModelForm):
         fields = ['name', 'quantity', 'price_per_unit', 'fertilizer_type', 'unit_of_measure', 'application_instructions']
         widgets = {
             'name': forms.TextInput(attrs={
-                'class': 'form-input rounded-md border-gray-300 shadow-sm',
-                'placeholder': 'Enter fertilizer name'
+                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
             }),
             'quantity': forms.NumberInput(attrs={
-                'class': 'form-input rounded-md border-gray-300 shadow-sm',
+                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500',
                 'min': '0',
-                'placeholder': 'Enter quantity'
             }),
             'price_per_unit': forms.NumberInput(attrs={
-                'class': 'form-input rounded-md border-gray-300 shadow-sm',
+                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500',
                 'min': '0',
                 'step': '0.01',
-                'placeholder': 'Enter price per unit'
             }),
             'fertilizer_type': forms.Select(attrs={
-                'class': 'form-select rounded-md border-gray-300 shadow-sm',
+                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
             }),
             'unit_of_measure': forms.Select(attrs={
-                'class': 'form-select rounded-md border-gray-300 shadow-sm',
+                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
             }),
             'application_instructions': forms.Textarea(attrs={
                 'rows': 4,
-                'cols': 40,
-                'class': 'form-textarea rounded-md border-gray-300 shadow-sm',
-                'placeholder': 'Enter application instructions (optional)'
+                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500',
             }),
         }
+
         
 class FertilizerUsageForm(forms.ModelForm):
     class Meta:
@@ -172,33 +170,29 @@ class PesticideForm(forms.ModelForm):
         fields = ['name', 'quantity', 'price_per_unit', 'pesticide_type', 'unit_of_measure', 'application_instructions']
         widgets = {
             'name': forms.TextInput(attrs={
-                'class': 'form-input rounded-md border-gray-300 shadow-sm',
-                'placeholder': 'Enter pesticide name'
+                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
             }),
             'quantity': forms.NumberInput(attrs={
-                'class': 'form-input rounded-md border-gray-300 shadow-sm',
+                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500',
                 'min': '0',
-                'placeholder': 'Enter quantity'
             }),
             'price_per_unit': forms.NumberInput(attrs={
-                'class': 'form-input rounded-md border-gray-300 shadow-sm',
+                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500',
                 'min': '0',
                 'step': '0.01',
-                'placeholder': 'Enter price per unit'
             }),
             'pesticide_type': forms.Select(attrs={
-                'class': 'form-select rounded-md border-gray-300 shadow-sm',
+                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
             }),
             'unit_of_measure': forms.Select(attrs={
-                'class': 'form-select rounded-md border-gray-300 shadow-sm',
+                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
             }),
             'application_instructions': forms.Textarea(attrs={
                 'rows': 4,
-                'cols': 40,
-                'class': 'form-textarea rounded-md border-gray-300 shadow-sm',
-                'placeholder': 'Enter application instructions (optional)'
+                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500',
             }),
         }
+
         
 class PesticideUsageForm(forms.ModelForm):
     class Meta:
@@ -227,11 +221,10 @@ class PesticideUsageForm(forms.ModelForm):
         }
         
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)  # Extract the current user
+        user = kwargs.pop('user', None)  
         super().__init__(*args, **kwargs)
 
         if user:
-            # Filter the pesticides to show only those belonging to the current user
             self.fields['pesticide'].queryset = Pesticide.objects.filter(user=user)
             
             
@@ -274,7 +267,7 @@ class FeedForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['name'].required = True
         self.fields['price_per_unit'].required = True
-        self.fields['quantity'].required = False  # nije required
+        self.fields['quantity'].required = True
 
     def clean_quantity(self):
         quantity = self.cleaned_data.get('quantity')

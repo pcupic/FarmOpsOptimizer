@@ -70,7 +70,9 @@ class Crop(models.Model):
     manufacturer = models.CharField(max_length=100, null=True, blank=True)
     variety_type = models.CharField(max_length=100, choices=VARIETY_TYPES, null=True, blank=True)
     
-
+    def __str__(self):
+        return self.name
+    
 class PlantingField(models.Model):
     SOIL_TYPES = [
         ('LOAM', 'Loam'),

@@ -8,14 +8,12 @@
 
     <form method="POST" class="space-y-6">
         {% csrf_token %}
-        <!-- Display form non-field errors -->
         {% if form.non_field_errors %}
             <div class="text-sm text-red-500 mb-4">
                 {{ form.non_field_errors }}
             </div>
         {% endif %}
 
-        <!-- Iterate through the form fields -->
         {% for field in form %}
         <div class="flex flex-col">
             <label for="{{ field.id_for_label }}" class="text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>

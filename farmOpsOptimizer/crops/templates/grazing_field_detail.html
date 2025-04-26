@@ -2,7 +2,6 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto p-6 bg-white shadow-xl rounded-2xl">
-    <!-- Back link -->
     <div class="mb-6">
         <a href="{% url 'crops:fields' %}" class="text-blue-600 hover:text-blue-800">&larr; Back to Fields List</a>
     </div>
@@ -22,7 +21,6 @@
         </div>
     </div>
 
-    <!-- Basic Info -->
     <div class="space-y-2 mb-8">
         <p class="text-xl font-semibold text-gray-700">Area: {{ grazing_field.area }} ha</p>
         <p class="text-lg text-gray-600">Water Source: {{ grazing_field.water_source }}</p>
@@ -30,9 +28,7 @@
         <p class="text-lg text-gray-600">Estimated Value: € {{ grazing_field.estimated_value }}</p>
     </div>
 
-    <!-- Alpine.js Tabs -->
     <div x-data="{ tab: 'herd' }" class="space-y-6">
-        <!-- Tabs Navigation -->
         <div class="flex space-x-4 border-b border-gray-200 mb-4">
             <button 
                 :class="tab === 'herd' ? 'text-blue-600 border-blue-600' : 'text-gray-500'" 
@@ -54,7 +50,6 @@
             </button>
         </div>
 
-        <!-- Herds -->
         <div x-show="tab === 'herd'">
             <h3 class="text-2xl font-semibold text-gray-800">Herds for {{ grazing_field.name }}</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
@@ -70,7 +65,6 @@
             </div>
         </div>
 
-        <!-- Individual Livestock -->
         <div x-show="tab === 'livestock'">
             <h3 class="text-2xl font-semibold text-gray-800">Individual Livestock for {{ grazing_field.name }}</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
@@ -86,7 +80,6 @@
             </div>
         </div>
 
-        <!-- Feed Report -->
         <div x-show="tab === 'feed_report'">
             <div class="flex items-center justify-between">
                 <h3 class="text-2xl font-semibold text-gray-800">Feed Report for {{ grazing_field.name }}</h3>
@@ -97,7 +90,6 @@
             </div>
             <p class="text-lg text-gray-600 mt-2">Here you can find the feed report data for the grazing field.</p>
         
-            <!-- Example placeholder for feed reports -->
             <div class="mt-4 space-y-4">
                 {% for report in feed_reports %}
                     <div class="bg-gray-50 p-4 rounded-lg shadow">

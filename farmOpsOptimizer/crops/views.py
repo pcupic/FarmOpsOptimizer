@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CropForm,  GrazingFieldForm, PlantingFieldForm, PlantingReportForm, HarvestSummaryForm
 from .models import Crop, GrazingField, PlantingField, PlantingReport, HarvestSummary
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
 from livestock.models import Herd, Livestock
 from resources.models import SeedUsage, FertilizerUsage, PesticideUsage, FeedReport
 
@@ -128,25 +127,19 @@ def delete_grazing_field(request, pk):
     return redirect('crops:grazing_field_list')
 
 def add_planting_report(request, pk):
-    # Get the PlantingField object by pk
     planting_field = get_object_or_404(PlantingField, pk=pk)
     
-    # Check if the request is a POST request
     if request.method == 'POST':
         form = PlantingReportForm(request.POST)
         if form.is_valid():
-            # Assign the PlantingField to the form before saving
             planting_report = form.save(commit=False)
             planting_report.planting_field = planting_field
-            planting_report.save()  # Save the form with the associated PlantingField
+            planting_report.save()  
             
-            # Redirect to the planting_field_detail page after saving the form
             return redirect('crops:planting_field_detail', pk=pk)
     else:
-        # If not a POST request, just create a new form
         form = PlantingReportForm()
     
-    # Return the template with the form
     return render(request, 'add_planting_report.html', {'form': form, 'planting_field': planting_field})
 
 

@@ -8,18 +8,15 @@
         </a>
     </div>
 
-    <!-- Search and Filter Form -->
     <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 mb-4">
         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Search and Filter</h2>
         <form method="GET">
             <div class="flex flex-wrap gap-4">
-                <!-- Search by title -->
                 <div class="flex-1 min-w-[200px]">
                     <label for="title" class="text-gray-600">Search by Title</label>
                     <input type="text" name="title" id="title" class="w-full p-2 border rounded-md" value="{{ request.GET.title }}">
                 </div>
 
-                <!-- Filter by Priority -->
                 <div class="flex-1 min-w-[200px]">
                     <label for="priority" class="text-gray-600">Priority</label>
                     <select name="priority" id="priority" class="w-full p-2 border rounded-md">
@@ -30,13 +27,11 @@
                     </select>
                 </div>
 
-                <!-- Filter by Start Date -->
                 <div class="flex-1 min-w-[200px]">
                     <label for="start_date" class="text-gray-600">Start Date</label>
                     <input type="date" name="start_date" id="start_date" class="w-full p-2 border rounded-md" value="{{ request.GET.start_date }}">
                 </div>
 
-                <!-- Filter by Due Date -->
                 <div class="flex-1 min-w-[200px]">
                     <label for="due_date" class="text-gray-600">Due Date</label>
                     <input type="date" name="due_date" id="due_date" class="w-full p-2 border rounded-md" value="{{ request.GET.due_date }}">

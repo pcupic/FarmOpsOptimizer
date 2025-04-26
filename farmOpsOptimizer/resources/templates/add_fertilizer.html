@@ -9,7 +9,6 @@
     <form method="POST" class="space-y-6">
         {% csrf_token %}
         
-        <!-- Fertilizer Name -->
         <div class="flex flex-col">
             <label for="id_name" class="text-sm font-medium text-gray-700 mb-1">Fertilizer Name:</label>
             {{ form.name }}
@@ -18,7 +17,6 @@
             {% endif %}
         </div>
 
-        <!-- Quantity -->
         <div class="flex flex-col">
             <label for="id_quantity" class="text-sm font-medium text-gray-700 mb-1">Quantity:</label>
             {{ form.quantity }}
@@ -27,7 +25,6 @@
             {% endif %}
         </div>
 
-        <!-- Price per Unit -->
         <div class="flex flex-col">
             <label for="id_price_per_unit" class="text-sm font-medium text-gray-700 mb-1">Price per Unit (€):</label>
             {{ form.price_per_unit }}
@@ -36,7 +33,6 @@
             {% endif %}
         </div>
 
-        <!-- Fertilizer Type -->
         <div class="flex flex-col">
             <label for="id_fertilizer_type" class="text-sm font-medium text-gray-700 mb-1">Fertilizer Type:</label>
             {{ form.fertilizer_type }}
@@ -45,7 +41,6 @@
             {% endif %}
         </div>
 
-        <!-- Unit of Measure -->
         <div class="flex flex-col">
             <label for="id_unit_of_measure" class="text-sm font-medium text-gray-700 mb-1">Unit of Measure:</label>
             {{ form.unit_of_measure }}
@@ -54,7 +49,6 @@
             {% endif %}
         </div>
 
-        <!-- Application Instructions -->
         <div class="flex flex-col">
             <label for="id_application_instructions" class="text-sm font-medium text-gray-700 mb-1">Application Instructions:</label>
             {{ form.application_instructions }}

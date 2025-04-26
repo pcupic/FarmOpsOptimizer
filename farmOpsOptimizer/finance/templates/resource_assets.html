@@ -12,7 +12,6 @@
         <button class="py-2 px-4" :class="{ 'border-b-2 border-blue-600 text-blue-600': tab === 'feeds' }" @click="tab = 'feeds'">Feeds</button>
     </div>
 
-<!-- Equipment Tab -->
 <div x-show="tab === 'equipment'" class="space-y-2">
     <h2 class="text-xl font-semibold">Total Value: ${{ totals.equipment.1|floatformat:2 }}</h2>
     {% if equipment %}
@@ -63,7 +62,6 @@
 
 
 
-    <!-- Seeds Tab -->
     <div x-show="tab === 'seeds'" class="space-y-2">
         <h2 class="text-xl font-semibold">Total Quantity: {{ totals.seeds.0 }} | Total Value: ${{ totals.seeds.1|floatformat:2 }}</h2>
         {% if seeds %}
@@ -77,7 +75,6 @@
         {% endif %}
     </div>
 
-    <!-- Fertilizers Tab -->
     <div x-show="tab === 'fertilizers'" class="space-y-2">
         <h2 class="text-xl font-semibold">Total Quantity: {{ totals.fertilizers.0 }} | Total Value: ${{ totals.fertilizers.1|floatformat:2 }}</h2>
         {% if fertilizers %}
@@ -91,7 +88,6 @@
         {% endif %}
     </div>
 
-    <!-- Pesticides Tab -->
     <div x-show="tab === 'pesticides'" class="space-y-2">
         <h2 class="text-xl font-semibold">Total Quantity: {{ totals.pesticides.0 }} | Total Value: ${{ totals.pesticides.1|floatformat:2 }}</h2>
         {% if pesticides %}
@@ -105,7 +101,6 @@
         {% endif %}
     </div>
 
-    <!-- Feeds Tab -->
     <div x-show="tab === 'feeds'" class="space-y-2">
         <h2 class="text-xl font-semibold">Total Quantity: {{ totals.feeds.0 }} | Total Value: ${{ totals.feeds.1|floatformat:2 }}</h2>
         {% if feeds %}

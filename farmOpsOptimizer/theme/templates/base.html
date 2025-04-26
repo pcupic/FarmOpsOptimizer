@@ -10,6 +10,7 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 
     <style>
         .nav-link {
@@ -96,6 +97,7 @@
                         <a href="{% url 'finance:summary' %}" class="block px-4 py-2 hover:bg-gray-100">Planting Fields</a>   
                         <a href="{% url 'finance:livestock_costs' %}" class="block px-4 py-2 hover:bg-gray-100">Livestock Health Costs</a>
                         <a href="{% url "finance:resource_assets" %}" class="block px-4 py-2 hover:bg-gray-100">Resource Assets</a>
+                        <a href="{% url "finance:financial_balance" %}" class="block px-4 py-2 hover:bg-gray-100">Balance</a>
                     </div>
                 </div>
 

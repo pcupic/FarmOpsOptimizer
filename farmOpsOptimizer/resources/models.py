@@ -13,7 +13,12 @@ class Equipment(models.Model):
     value = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     last_maintenance_date = models.DateTimeField(null=True, blank=True)
     purchase_date = models.DateField(null=True, blank=True)
-
+    condition = models.CharField(
+        max_length=6, 
+        choices=condition_choices, 
+        default='NEW', 
+    )
+    
     def __str__(self):
         return f"Equipment: {self.name}"
 

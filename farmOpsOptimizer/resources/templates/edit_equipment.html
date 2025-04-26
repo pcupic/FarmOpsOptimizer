@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-2xl mt-10 animate-fade-in">
+    <h2 class="text-3xl font-extrabold text-emerald-700 mb-6 text-center">Edit Equipment: {{ equipment.name }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {{ form.as_p }}
+        </div>
+
+        <div class="pt-4 flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0 sm:space-x-4">
+            <a href="{% url 'resources:equipment_detail' equipment.id %}" class="w-full sm:w-auto text-center bg-gray-300 text-gray-800 py-3 px-6 rounded-lg hover:bg-gray-400 transition-all duration-300">
+                Cancel
+            </a>
+            <button type="submit" class="w-full sm:w-auto bg-emerald-600 text-white py-3 px-6 rounded-lg shadow hover:bg-emerald-700 transition-all duration-300">
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+</style>
+{% endblock %}

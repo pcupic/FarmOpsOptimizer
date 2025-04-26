@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import LivestockForm, HealthRecordForm, VaccinationRecordForm, SpeciesForm, HerdForm, ProductForm
-from .models import Livestock, Species, Herd, HealthRecord, VaccinationRecord, Product
+from .forms import LivestockForm, HealthRecordForm, VaccinationRecordForm, SpeciesForm, HerdForm
+from .models import Livestock, Species, Herd, HealthRecord, VaccinationRecord
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -54,7 +54,6 @@ def species_detail(request, pk):
 def livestock_detail(request, id):
     livestock = get_object_or_404(Livestock, id=id)
     
-    # Dohvati najnoviji health record za ovu životinju
     latest_health_record = livestock.health_records.order_by('-date_recorded').first()
 
     return render(request, 'livestock_detail.html', {'livestock': livestock, 'latest_health_record': latest_health_record})
@@ -155,30 +154,24 @@ def delete_species(request, pk):
 
 @login_required
 def health_record_detail(request, id):
-    # Dohvati specifičan health record prema ID-u
     health_record = get_object_or_404(HealthRecord, id=id)
 
     return render(request, 'health_record_detail.html', {'health_record': health_record})
 
 def vaccination_detail(request, id):
-    # Pronađi vakcinaciju prema ID-u
     vaccination = get_object_or_404(VaccinationRecord, id=id)
     
-    # Predaj podatke u template
     return render(request, 'vaccination_detail.html', {'vaccination': vaccination})
 
 def edit_livestock(request, pk):
-    # Dohvati objekt stoke po id-u (pk)
     livestock = get_object_or_404(Livestock, pk=pk)
     
-    # Ako je zahtjev za POST (kada je obrazac poslan)
     if request.method == 'POST':
         form = LivestockForm(request.POST, instance=livestock)
         if form.is_valid():
             form.save()
-            return redirect('livestock:livestock_list')  # Preusmjerava nakon što je obrazac spremljen
+            return redirect('livestock:livestock_list') 
     else:
-        # Ako je GET, prikaži obrazac s postojećim podacima
         form = LivestockForm(instance=livestock)
 
     return render(request, 'edit_livestock.html', {'form': form, 'livestock': livestock})
@@ -186,8 +179,7 @@ def edit_livestock(request, pk):
 def delete_livestock(request, pk):
     livestock = get_object_or_404(Livestock, pk=pk)
 
-    # Ako je POST, izvrši brisanje
     if request.method == 'POST':
         livestock.delete()
-        return redirect('livestock:livestock_list')  # Preusmjerava nakon brisanja
+    return redirect('livestock:livestock_list')  
 

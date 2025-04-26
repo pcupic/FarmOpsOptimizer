@@ -19,9 +19,6 @@
     </div>
     {% endif %}
 
-    
-
-    <!-- Table displaying pesticide details -->
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">
         <table class="min-w-full bg-white border border-gray-300 rounded-lg">
             <thead class="bg-emerald-50 text-gray-800 text-sm uppercase tracking-wider">
@@ -51,7 +48,13 @@
                     <td class="py-3 px-4 border-b border-gray-200">{{ pesticide.get_unit_of_measure_display }}</td>
                     <td class="py-3 px-4 border-b border-gray-200">{{ pesticide.application_instructions }}</td>
                     <td class="py-3 px-4 border-b border-gray-200 text-right">
-                        <a href="{% url 'resources:add_pesticide' %}" class="text-blue-500 hover:text-blue-700 font-bold">Edit</a>
+                        <a href="{% url 'resources:edit_pesticide' pesticide.id %}" class="text-blue-500 hover:text-blue-700 font-bold">Edit</a> |
+                        <form method="post" action="{% url 'resources:delete_pesticide' pesticide.id %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-500 hover:text-red-700 font-bold" onclick="return confirm('Are you sure you want to delete this seed?');">
+                                Delete
+                            </button>
+                        </form>
                     </td>
                 </tr>
                 {% empty %}
