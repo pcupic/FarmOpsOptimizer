@@ -55,6 +55,7 @@ def planting_field_overview(request):
         'fields_data': fields_data,
     })
 
+@login_required
 def livestock_costs(request):
     livestocks = Livestock.objects.filter(user=request.user)
     livestock_data = []
@@ -83,6 +84,7 @@ def livestock_costs(request):
 
     return render(request, 'finance/livestock_costs.html', {'livestock_data': livestock_data})
 
+@login_required
 def resource_assets(request):
     user = request.user
     equipment = Equipment.objects.filter(user=user).annotate(

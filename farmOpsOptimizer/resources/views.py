@@ -4,6 +4,7 @@ from .models import Equipment, Seed, MaintenanceRecord, Fertilizer, Pesticide, F
 from crops.models import PlantingField, GrazingField
 from django.contrib.auth.decorators import login_required
 
+@login_required
 def add_equipment(request):
     if request.method == 'POST':
         form = EquipmentForm(request.POST)
@@ -17,11 +18,12 @@ def add_equipment(request):
 
     return render(request, 'resources/add_equipment.html', {'form': form})
 
-
+@login_required
 def equipment_list(request):
     equipment = Equipment.objects.filter(user=request.user)
     return render(request, 'resources/equipment_list.html', {'equipment': equipment})
 
+@login_required
 def seed_add(request):
     if request.method == 'POST':
         form = SeedForm(request.POST)
@@ -34,16 +36,19 @@ def seed_add(request):
         form = SeedForm()
     return render(request, 'resources/add_seed.html', {'form': form})
 
+@login_required
 def seed_list(request):
     seeds = Seed.objects.filter(user=request.user)
     return render(request, 'resources/seed_list.html', {'seeds': seeds})
 
+@login_required
 def increase_seed_quantity(request, pk):
     seed = get_object_or_404(Seed, pk=pk)
     seed.quantity = (seed.quantity or 0) + 1
     seed.save()
     return redirect('resources:seed_list')
 
+@login_required
 def decrease_seed_quantity(request, pk):
     seed = get_object_or_404(Seed, pk=pk)
     if seed.quantity and seed.quantity > 0:
@@ -73,12 +78,13 @@ def add_seed_usage(request, field_id):
 
     return render(request, 'resources/add_seed_usage.html', {'form': form})
 
-
+@login_required
 def equipment_detail(request, pk):
     equipment = get_object_or_404(Equipment, pk=pk)
     maintenance_records = MaintenanceRecord.objects.filter(equipment=equipment)
     return render(request, 'resources/equipment_detail.html', {'equipment': equipment, 'maintenance_records': maintenance_records})
 
+@login_required
 def add_maintenance_record(request, pk):
     equipment = get_object_or_404(Equipment, pk=pk)
     if request.method == 'POST':
@@ -93,6 +99,7 @@ def add_maintenance_record(request, pk):
 
     return render(request, 'resources/add_maintenance_record.html', {'form': form})
 
+@login_required
 def add_fertilizer(request):
     if request.method == 'POST':
         form = FertilizerForm(request.POST)
@@ -106,22 +113,26 @@ def add_fertilizer(request):
 
     return render(request, 'resources/add_fertilizer.html', {'form': form})
 
+@login_required
 def fertilizer_list(request):
     fertilizers = Fertilizer.objects.filter(user=request.user)
     return render(request, 'resources/fertilizer_list.html', {'fertilizers': fertilizers})
 
+@login_required
 def increase_fertilizer_quantity(request, pk):
     fertilizer = get_object_or_404(Fertilizer, pk=pk)
     fertilizer.quantity = (fertilizer.quantity or 0) + 1
     fertilizer.save()
     return redirect('resources:fertilizer_list')
 
+@login_required
 def decrease_fertilizer_quantity(request, pk):
     fertilizer = get_object_or_404(Fertilizer, pk=pk)
     if fertilizer.quantity and fertilizer.quantity > 0:
         fertilizer.quantity -= 1
         fertilizer.save()
     return redirect('resources:fertilizer_list')
+
 @login_required
 def add_fertilizer_usage(request, field_id):
     field = get_object_or_404(PlantingField, id=field_id)
@@ -155,9 +166,7 @@ def add_fertilizer_usage(request, field_id):
         'field': field,
     })
 
-
-
-    
+@login_required
 def add_pesticide(request):
     if request.method == 'POST':
         form = PesticideForm(request.POST)
@@ -171,18 +180,19 @@ def add_pesticide(request):
 
     return render(request, 'resources/add_pesticide.html', {'form': form})
 
+@login_required
 def pesticide_list(request):
     pesticides = Pesticide.objects.filter(user=request.user)
-    
     return render(request, 'resources/pesticide_list.html', {'pesticides': pesticides})
 
-
+@login_required
 def increase_quantity_pesticide(request, pesticide_id):
     pesticide = get_object_or_404(Pesticide, id=pesticide_id)
     pesticide.quantity += 1 
     pesticide.save()
     return redirect('resources:pesticide_list')
 
+@login_required
 def decrease_quantity_pesticide(request, pesticide_id):
     pesticide = get_object_or_404(Pesticide, id=pesticide_id)
     if pesticide.quantity > 0:
@@ -213,7 +223,7 @@ def add_pesticide_usage(request, field_id):
         'field': field,
     })
     
-    
+@login_required
 def add_feed(request):
     if request.method == 'POST':
         form = FeedForm(request.POST)
@@ -227,17 +237,19 @@ def add_feed(request):
 
     return render(request, 'resources/add_feed.html', {'form': form})
 
+@login_required
 def feed_list(request):
     feeds = Feed.objects.filter(user=request.user)
-    
     return render(request, 'resources/feed_list.html', {'feeds': feeds})
 
+@login_required
 def increase_quantity(request, feed_id):
     feed = Feed.objects.get(id=feed_id)
     feed.quantity += 1  
     feed.save()
     return redirect('resources:feed_list')
 
+@login_required
 def decrease_quantity(request, feed_id):
     feed = Feed.objects.get(id=feed_id)
     if feed.quantity > 0:
@@ -245,6 +257,7 @@ def decrease_quantity(request, feed_id):
         feed.save()
     return redirect('resources:feed_list')
 
+@login_required
 def add_feed_report(request, pk):
     grazing_field = get_object_or_404(GrazingField, pk=pk)
 
@@ -273,6 +286,7 @@ def add_feed_report(request, pk):
         'grazing_field': grazing_field, 
     })
 
+@login_required
 def edit_equipment(request, id):
     equipment = get_object_or_404(Equipment, id=id)  
     if request.method == 'POST':
@@ -284,13 +298,14 @@ def edit_equipment(request, id):
         form = EquipmentForm(instance=equipment)
     return render(request, 'resources/edit_equipment.html', {'form': form, 'equipment': equipment})
 
+@login_required
 def delete_equipment(request, id):
     equipment = get_object_or_404(Equipment, id=id)  
     if request.method == 'POST':
         equipment.delete() 
         return redirect('resources:equipment_list') 
     
-
+@login_required
 def edit_seed(request, pk):
     seed = get_object_or_404(Seed, pk=pk)
     if request.method == "POST":
@@ -302,6 +317,7 @@ def edit_seed(request, pk):
         form = SeedForm(instance=seed)
     return render(request, 'resources/edit_seed.html', {'form': form, 'seed': seed})
 
+@login_required
 def delete_seed(request, pk):
     seed = get_object_or_404(Seed, pk=pk)
     
@@ -309,6 +325,7 @@ def delete_seed(request, pk):
         seed.delete()   
     return redirect('resources:seed_list') 
 
+@login_required
 def edit_fertilizer(request, id):
     fertilizer = get_object_or_404(Fertilizer, id=id)
     
@@ -322,6 +339,7 @@ def edit_fertilizer(request, id):
     
     return render(request, 'resources/edit_fertilizer.html', {'form': form, 'fertilizer': fertilizer})
 
+@login_required
 def delete_fertilizer(request, id):
     fertilizer = get_object_or_404(Fertilizer, id=id)
 
@@ -329,6 +347,7 @@ def delete_fertilizer(request, id):
         fertilizer.delete()
     return redirect('resources:fertilizer_list') 
 
+@login_required
 def edit_pesticide(request, id):
     pesticide = get_object_or_404(Pesticide, id=id)
 
@@ -342,13 +361,15 @@ def edit_pesticide(request, id):
 
     return render(request, 'resources/edit_pesticide.html', {'form': form, 'pesticide': pesticide})
 
+@login_required
 def delete_pesticide(request, id):
     pesticide = get_object_or_404(Pesticide, id=id)
 
     if request.method == 'POST':
         pesticide.delete()
     return redirect('resources:pesticide_list')  
-    
+  
+@login_required  
 def edit_feed(request, id):
     feed = get_object_or_404(Feed, id=id)
 
@@ -362,6 +383,7 @@ def edit_feed(request, id):
 
     return render(request, 'edit_feed.html', {'form': form})
 
+@login_required
 def delete_feed(request, id):
     feed = get_object_or_404(Feed, id=id)
 

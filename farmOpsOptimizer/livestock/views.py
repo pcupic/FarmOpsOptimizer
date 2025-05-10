@@ -158,11 +158,13 @@ def health_record_detail(request, id):
 
     return render(request, 'livestock/health_record_detail.html', {'health_record': health_record})
 
+@login_required
 def vaccination_detail(request, id):
     vaccination = get_object_or_404(VaccinationRecord, id=id)
     
     return render(request, 'livestock/vaccination_detail.html', {'vaccination': vaccination})
 
+@login_required
 def edit_livestock(request, pk):
     livestock = get_object_or_404(Livestock, pk=pk)
     
@@ -176,6 +178,7 @@ def edit_livestock(request, pk):
 
     return render(request, 'livestock/edit_livestock.html', {'form': form, 'livestock': livestock})
 
+@login_required
 def delete_livestock(request, pk):
     livestock = get_object_or_404(Livestock, pk=pk)
 
