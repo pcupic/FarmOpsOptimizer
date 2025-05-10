@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow">
+    <h1 class="text-2xl font-bold mb-4 text-emerald-600">{{ herd.name }}</h1>
+
+    <p><strong>Species:</strong> {{ herd.species }}</p>
+    <p><strong>Field:</strong> {{ herd.field }}</p>
+    <p><strong>Livestock count:</strong> {{ herd.livestock_count }}</p>
+
+    <hr class="my-4">
+
+    <h2 class="text-xl font-semibold mb-2">Livestock in this Herd:</h2>
+    
+    {% if livestock %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {% for animal in livestock %}
+        <div class="bg-white border rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow duration-200">
+            <a href="{% url 'livestock:livestock_detail' animal.id %}" class="block">
+                <h3 class="text-xl font-semibold text-emerald-600">{{ animal.name }}</h3>
+                <p class="text-sm text-gray-600">{{ animal.breed }} | {{ animal.gender }}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>No livestock in this herd yet.</p>
+    {% endif %}
+    
+    <a href="{% url 'livestock:add_livestock_to_herd' herd.id %}" class="inline-block bg-emerald-500 text-white px-3 py-2 rounded mt-4 hover:bg-emerald-600">
+        Add Livestock to Herd
+    </a>    
+</div>
+{% endblock %}

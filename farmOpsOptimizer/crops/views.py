@@ -8,12 +8,12 @@ from resources.models import SeedUsage, FertilizerUsage, PesticideUsage, FeedRep
 @login_required
 def crops(request):
     crops = Crop.objects.filter(user=request.user)
-    return render(request, 'crops.html', {'crops': crops})
+    return render(request, 'crops/crops.html', {'crops': crops})
 
 @login_required
 def fields(request):
     fields = PlantingField.objects.filter(user=request.user)
-    return render(request, 'fields.html', {'fields': fields})
+    return render(request, 'crops/fields.html', {'fields': fields})
 
 @login_required
 def add_crop(request):
@@ -26,7 +26,7 @@ def add_crop(request):
             return redirect('crops:crops')
     else:
         form = CropForm()
-    return render(request, 'add_crop.html', {'form': form})
+    return render(request, 'crops/add_crop.html', {'form': form})
 
 @login_required
 def add_field(request):
@@ -40,7 +40,7 @@ def add_field(request):
     else:
         form = PlantingFieldForm()
 
-    return render(request, 'add_field.html', {'form': form})
+    return render(request, 'crops/add_field.html', {'form': form})
 
 
 @login_required
@@ -55,7 +55,7 @@ def edit_field(request, field_id):
     else:
         form = PlantingFieldForm(instance=field)
 
-    return render(request, 'edit_field.html', {'form': form, 'field': field})
+    return render(request, 'crops/edit_field.html', {'form': form, 'field': field})
 
 @login_required
 def delete_field(request, field_id):
@@ -77,7 +77,7 @@ def edit_crop(request, crop_id):
     else:
         form = CropForm(instance=crop)
 
-    return render(request, 'edit_crop.html', {'form': form, 'crop': crop})
+    return render(request, 'crops/edit_crop.html', {'form': form, 'crop': crop})
 
 @login_required
 def delete_crop(request, crop_id):
@@ -98,12 +98,12 @@ def add_grazing_field(request):
     else:
         form = GrazingFieldForm()
 
-    return render(request, 'add_grazing_field.html', {'form': form})
+    return render(request, 'crops/add_grazing_field.html', {'form': form})
 
 @login_required
 def grazing_field_list(request):
     grazing_fields = GrazingField.objects.filter(user=request.user)  
-    return render(request, 'grazing_field_list.html', {'grazing_fields': grazing_fields})
+    return render(request, 'crops/grazing_field_list.html', {'grazing_fields': grazing_fields})
 
 def edit_grazing_field(request, pk):
     field = get_object_or_404(GrazingField, pk=pk)
@@ -116,7 +116,7 @@ def edit_grazing_field(request, pk):
     else:
         form = GrazingFieldForm(instance=field)
 
-    return render(request, 'edit_grazing_field.html', {'form': form, 'field': field})
+    return render(request, 'crops/edit_grazing_field.html', {'form': form, 'field': field})
 
 def delete_grazing_field(request, pk):
     field = get_object_or_404(GrazingField, pk=pk)
@@ -140,7 +140,7 @@ def add_planting_report(request, pk):
     else:
         form = PlantingReportForm()
     
-    return render(request, 'add_planting_report.html', {'form': form, 'planting_field': planting_field})
+    return render(request, 'crops/add_planting_report.html', {'form': form, 'planting_field': planting_field})
 
 
 def planting_field_detail(request, pk):
@@ -151,7 +151,7 @@ def planting_field_detail(request, pk):
     seed_usages = SeedUsage.objects.filter(field=pk)
     fertilizer_usages = FertilizerUsage.objects.filter(field=pk)
     pesticide_usages = PesticideUsage.objects.filter(field=pk)
-    return render(request, 'planting_field_detail.html', {
+    return render(request, 'crops/planting_field_detail.html', {
         'planting_field': planting_field,
         'planting_reports': planting_reports,
         'archived_reports': archived_reports,
@@ -163,12 +163,15 @@ def planting_field_detail(request, pk):
 
 def planting_report_detail(request, pk):
     planting_report = get_object_or_404(PlantingReport, pk=pk)
-    return render(request, 'planting_report_detail.html', {'planting_report': planting_report})
+    return render(request, 'crops/planting_report_detail.html', {'planting_report': planting_report})
 
 
 def archive_all_reports(request, pk):
     planting_field = get_object_or_404(PlantingField, pk=pk)
     planting_field.reports.update(archived=True)
+    planting_field.crop = None
+    planting_field.planting_date = None
+    planting_field.save()
     return redirect('crops:add_harvest_summary', field_id=planting_field.pk)
 
 def add_harvest_summary(request, field_id):
@@ -183,7 +186,7 @@ def add_harvest_summary(request, field_id):
     else:
         form = HarvestSummaryForm()
 
-    return render(request, 'add_harvest_summary.html', {'form': form, 'field': field})
+    return render(request, 'crops/add_harvest_summary.html', {'form': form, 'field': field})
 
 def grazing_field_detail(request, id):
     grazing_field = get_object_or_404(GrazingField, id=id)
@@ -191,7 +194,7 @@ def grazing_field_detail(request, id):
     herds = Herd.objects.filter(field=id)
     livestock = Livestock.objects.filter(grazing_field=id)
     
-    return render(request, 'grazing_field_detail.html', {
+    return render(request, 'crops/grazing_field_detail.html', {
         'grazing_field': grazing_field,
         'herds': herds,
         'livestock': livestock,
@@ -200,4 +203,4 @@ def grazing_field_detail(request, id):
     
 def crop_detail(request, pk):
     crop = get_object_or_404(Crop, pk=pk)
-    return render(request, 'crop_detail.html', {'crop': crop})
+    return render(request, 'crops/crop_detail.html', {'crop': crop})

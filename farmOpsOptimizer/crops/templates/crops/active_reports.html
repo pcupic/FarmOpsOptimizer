@@ -1,0 +1,16 @@
+<div class="flex items-center justify-between mb-2">
+    <h3 class="text-xl font-semibold text-gray-700">Planting Reports</h3>
+    <a href="{% url 'crops:add_planting_report' planting_field.id %}" class="text-green-600 hover:text-green-800 text-2xl font-bold">+</a>
+</div>
+<ul class="space-y-2">
+    {% for report in planting_reports %}
+        <li class="py-2">
+            <a href="{% url 'crops:planting_report_detail' report.id %}" class="block p-4 bg-gray-100 shadow-lg rounded-lg hover:bg-gray-200 transition-all">
+                <p class="text-sm text-gray-500">Report Date: {{ report.report_date|date:"F j, Y" }}</p>
+                <p class="text-sm text-gray-500">Details: {{ report.notes }}</p>
+            </a>
+        </li>
+    {% empty %}
+        <p class="text-sm text-gray-500">No planting reports found for this field.</p>
+    {% endfor %}
+</ul>

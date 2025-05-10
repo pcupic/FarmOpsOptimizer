@@ -1,0 +1,17 @@
+<div class="flex items-center justify-between mb-2">
+    <h3 class="text-xl font-semibold text-gray-700">Seed Usage</h3>
+    <a href="{% url 'resources:add_seed_usage' planting_field.id %}" class="text-green-600 hover:text-green-800 text-2xl font-bold">+</a>
+</div>
+<ul class="space-y-2">
+    {% for usage in seed_usages %}
+        <li class="py-2">
+            <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg shadow-sm mb-4">
+                <p class="text-gray-700"><strong>Date:</strong> {{ usage.usage_date|date:"F j, Y" }}</p>
+                <p class="text-gray-700"><strong>Seed Type:</strong> {{ usage.seed.name }}</p>
+                <p class="text-gray-700"><strong>Quantity Used:</strong> {{ usage.quantity_used }} {{ usage.seed.unit_of_measure }}</p>
+            </div>
+        </li>
+    {% empty %}
+        <p class="text-sm text-gray-500">No seed usage records found.</p>
+    {% endfor %}
+</ul>

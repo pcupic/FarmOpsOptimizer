@@ -15,17 +15,17 @@ def add_livestock(request):
             return redirect('livestock:livestock_list')
     else:
         form = LivestockForm(user=request.user)
-    return render(request, 'add_livestock.html', {'form': form})
+    return render(request, 'livestock/add_livestock.html', {'form': form})
 
 @login_required
 def livestock_list(request):
     livestock = Livestock.objects.filter(user=request.user)
-    return render(request, 'livestock_list.html', {'livestock': livestock})
+    return render(request, 'livestock/livestock_list.html', {'livestock': livestock})
 
 @login_required
 def species_list(request):
     species = Species.objects.filter(status='approved')
-    return render(request, 'species_list.html', {'species': species})
+    return render(request, 'livestock/species_list.html', {'species': species})
 
 @login_required
 def species_add(request):
@@ -42,13 +42,13 @@ def species_add(request):
             return redirect('livestock:species_list')  
     else:
         form = SpeciesForm()
-    return render(request, 'add_species.html', {'form': form})
+    return render(request, 'livestock/add_species.html', {'form': form})
 
 
 @login_required
 def species_detail(request, pk):
     species = get_object_or_404(Species, pk=pk)
-    return render(request, 'species_detail.html', {'species': species})
+    return render(request, 'livestock/species_detail.html', {'species': species})
 
 @login_required
 def livestock_detail(request, id):
@@ -56,12 +56,12 @@ def livestock_detail(request, id):
     
     latest_health_record = livestock.health_records.order_by('-date_recorded').first()
 
-    return render(request, 'livestock_detail.html', {'livestock': livestock, 'latest_health_record': latest_health_record})
+    return render(request, 'livestock/livestock_detail.html', {'livestock': livestock, 'latest_health_record': latest_health_record})
 
 @login_required
 def herd_list(request):
     herds = Herd.objects.filter(user=request.user)
-    return render(request, 'herd_list.html', {'herds': herds})
+    return render(request, 'livestock/herd_list.html', {'herds': herds})
 
 @login_required
 def add_herd(request):
@@ -74,13 +74,13 @@ def add_herd(request):
             return redirect('livestock:herd_list')
     else:
         form = HerdForm()
-    return render(request, 'add_herd.html', {'form': form})
+    return render(request, 'livestock/add_herd.html', {'form': form})
 
 @login_required
 def herd_detail(request, pk):
     herd = get_object_or_404(Herd, pk=pk)
     livestock = herd.livestock.all()
-    return render(request, 'herd_detail.html', {'herd': herd, 'livestock': livestock})
+    return render(request, 'livestock/herd_detail.html', {'herd': herd, 'livestock': livestock})
 
 @login_required
 def add_livestock_to_herd(request, herd_id):
@@ -92,7 +92,7 @@ def add_livestock_to_herd(request, herd_id):
         Livestock.objects.filter(id__in=selected_ids).update(herd=herd)
         return redirect('livestock:herd_detail', herd.id)
 
-    return render(request, 'add_livestock_to_herd.html', {
+    return render(request, 'livestock/add_livestock_to_herd.html', {
         'herd': herd,
         'available_livestock': available_livestock,
     })
@@ -111,7 +111,7 @@ def add_health_record(request, pk):
     else:
         form = HealthRecordForm()
 
-    return render(request, 'add_health_record.html', {'form': form, 'livestock': livestock})
+    return render(request, 'livestock/add_health_record.html', {'form': form, 'livestock': livestock})
 
 @login_required
 def add_vaccination_record(request, pk):
@@ -127,13 +127,13 @@ def add_vaccination_record(request, pk):
     else:
         form = VaccinationRecordForm()
 
-    return render(request, 'add_vaccination_record.html', {'form': form, 'livestock': livestock})
+    return render(request, 'livestock/add_vaccination_record.html', {'form': form, 'livestock': livestock})
 
 @login_required
 @staff_member_required
 def pending_species_list(request):
     species = Species.objects.filter(status='pending')  
-    return render(request, 'pending_species_list.html', {'species': species})
+    return render(request, 'livestock/pending_species_list.html', {'species': species})
 
 @login_required
 @staff_member_required
@@ -156,12 +156,12 @@ def delete_species(request, pk):
 def health_record_detail(request, id):
     health_record = get_object_or_404(HealthRecord, id=id)
 
-    return render(request, 'health_record_detail.html', {'health_record': health_record})
+    return render(request, 'livestock/health_record_detail.html', {'health_record': health_record})
 
 def vaccination_detail(request, id):
     vaccination = get_object_or_404(VaccinationRecord, id=id)
     
-    return render(request, 'vaccination_detail.html', {'vaccination': vaccination})
+    return render(request, 'livestock/vaccination_detail.html', {'vaccination': vaccination})
 
 def edit_livestock(request, pk):
     livestock = get_object_or_404(Livestock, pk=pk)
@@ -174,7 +174,7 @@ def edit_livestock(request, pk):
     else:
         form = LivestockForm(instance=livestock)
 
-    return render(request, 'edit_livestock.html', {'form': form, 'livestock': livestock})
+    return render(request, 'livestock/edit_livestock.html', {'form': form, 'livestock': livestock})
 
 def delete_livestock(request, pk):
     livestock = get_object_or_404(Livestock, pk=pk)

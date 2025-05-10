@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-2xl mt-10 animate-fade-in">
+    <h2 class="text-3xl font-extrabold text-emerald-700 mb-6 text-center">
+        Add New Field
+    </h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {% for field in form %}
+                <div class="flex flex-col">
+                    <label for="{{ field.id_for_label }}" class="text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+                    {% if field.name == 'planting_date' %}
+                        <input type="datetime-local" name="{{ field.name }}" id="{{ field.id_for_label }}" value="{{ field.value|date:'Y-m-d H:i' }}" 
+                        class="form-input border border-gray-300 rounded-lg p-3 mt-1" />
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    {% if field.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="pt-4 flex justify-end mt-6">
+            <button type="submit" class="bg-emerald-600 text-white py-3 px-6 rounded-lg shadow hover:bg-emerald-700 transition-all duration-300">
+                Save Field
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+</style>
+{% endblock %}
+
+
+
+
+

@@ -226,7 +226,16 @@ class PesticideUsageForm(forms.ModelForm):
 
         if user:
             self.fields['pesticide'].queryset = Pesticide.objects.filter(user=user)
-            
+  
+    def clean_quantity_used(self):
+        quantity_used = self.cleaned_data.get('quantity_used')
+        pesticide = self.cleaned_data.get('pesticide')
+
+        if pesticide and quantity_used:
+            if quantity_used > pesticide.quantity:
+                unit = pesticide.get_unit_of_measure_display()
+                raise forms.ValidationError(f"Cannot use more than {pesticide.quantity} {unit}.")
+        return quantity_used       
             
 class FeedForm(forms.ModelForm):
     class Meta:

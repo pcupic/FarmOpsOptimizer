@@ -123,8 +123,8 @@ class Fertilizer(models.Model):
 
 class FertilizerUsage(models.Model):
     fertilizer = models.ForeignKey(Fertilizer, on_delete=models.CASCADE, related_name='usages')
-    field = models.ForeignKey(PlantingField, on_delete=models.SET_NULL, null=True, blank=True) 
-    date_applied = models.DateTimeField(auto_now_add=True)
+    field = models.ForeignKey(PlantingField, on_delete=models.CASCADE) 
+    date_applied = models.DateField(auto_now_add=True)
     amount_used = models.FloatField()
     notes = models.TextField(blank=True, null=True)
 
@@ -219,7 +219,7 @@ class Pesticide(models.Model):
 
 class PesticideUsage(models.Model):
     pesticide = models.ForeignKey(Pesticide, on_delete=models.CASCADE, related_name='usage_records')
-    field = models.ForeignKey(PlantingField, on_delete=models.SET_NULL, null=True, blank=True) 
+    field = models.ForeignKey(PlantingField, on_delete=models.CASCADE) 
     quantity_used = models.FloatField()  
     date_of_application = models.DateField(auto_now_add=True)  
     method_of_application = models.CharField(max_length=255, blank=True, null=True) 

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-4xl font-bold text-emerald-700">Herd List</h1>
+        <a href="{% url 'livestock:add_herd' %}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg shadow-lg font-medium transition duration-200">
+            Add Herd
+        </a>
+    </div>
+
+    {% if herds %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {% for herd in herds %}
+            <a href="{% url 'livestock:herd_detail' herd.id %}" class="block p-6 rounded-2xl border border-emerald-200 bg-white shadow-md hover:shadow-xl hover:border-emerald-500 hover:bg-emerald-50 transition duration-300">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2 group-hover:text-emerald-700 transition">
+                    {{ herd.name }}
+                </h2>
+                {% if herd.species %}
+                    <p class="text-sm text-gray-700 mb-1">Species: {{ herd.species.name }}</p>
+                {% else %}
+                    <p class="text-sm text-gray-400 italic mb-1">Species not set</p>
+                {% endif %}
+        
+                {% if herd.field %}
+                    <p class="text-sm text-gray-700">Field: {{ herd.field.name }}</p>
+                {% else %}
+                    <p class="text-sm text-gray-400 italic">No field assigned</p>
+                {% endif %}
+            </a>
+        {% endfor %}
+        
+        </div>
+    {% else %}
+        <div class="text-gray-500 italic mt-10 text-center text-lg">No herds available.</div>
+    {% endif %}
+</div>
+{% endblock %}

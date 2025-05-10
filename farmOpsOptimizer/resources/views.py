@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import EquipmentForm, SeedForm, SeedUsageForm, MaintenanceRecordForm, FertilizerForm, FertilizerUsageForm, PesticideForm, PesticideUsageForm, FeedForm, FeedReportForm
 from .models import Equipment, Seed, MaintenanceRecord, Fertilizer, Pesticide, Feed
 from crops.models import PlantingField, GrazingField
+from django.contrib.auth.decorators import login_required
 
 def add_equipment(request):
     if request.method == 'POST':
@@ -14,12 +15,12 @@ def add_equipment(request):
     else:
         form = EquipmentForm()
 
-    return render(request, 'add_equipment.html', {'form': form})
+    return render(request, 'resources/add_equipment.html', {'form': form})
 
 
 def equipment_list(request):
     equipment = Equipment.objects.filter(user=request.user)
-    return render(request, 'equipment_list.html', {'equipment': equipment})
+    return render(request, 'resources/equipment_list.html', {'equipment': equipment})
 
 def seed_add(request):
     if request.method == 'POST':
@@ -31,11 +32,11 @@ def seed_add(request):
             return redirect('resources:seed_list')  
     else:
         form = SeedForm()
-    return render(request, 'add_seed.html', {'form': form})
+    return render(request, 'resources/add_seed.html', {'form': form})
 
 def seed_list(request):
     seeds = Seed.objects.filter(user=request.user)
-    return render(request, 'seed_list.html', {'seeds': seeds})
+    return render(request, 'resources/seed_list.html', {'seeds': seeds})
 
 def increase_seed_quantity(request, pk):
     seed = get_object_or_404(Seed, pk=pk)
@@ -50,37 +51,33 @@ def decrease_seed_quantity(request, pk):
         seed.save()
     return redirect('resources:seed_list')
 
-def add_seed_usage(request, field_id, seed_id):
-    field = PlantingField.objects.get(id=field_id)
+@login_required
+def add_seed_usage(request, field_id):
+    field = get_object_or_404(PlantingField, id=field_id)
     crop = field.crop
-    seed = get_object_or_404(Seed, crop=crop)  
 
     if request.method == 'POST':
         form = SeedUsageForm(request.POST, crop=crop)
         if form.is_valid():
-            quantity_used = form.cleaned_data['quantity_used']
-            
-            if quantity_used > seed.quantity:
-                form.add_error('quantity_used', f'Cannot use more than {seed.quantity} units of this seed.')
-            else:
-                seed_usage = form.save(commit=False)
-                seed_usage.field = field
-                seed_usage.seed = seed
-                seed_usage.save()
+            seed_usage = form.save(commit=False)
+            seed_usage.field = field
+            seed_usage.seed = form.cleaned_data['seed']
+            seed_usage.save()
 
-                seed.quantity -= quantity_used
-                seed.save()
+            seed_usage.seed.quantity -= form.cleaned_data['quantity_used']
+            seed_usage.seed.save()
 
-                return redirect('crops:planting_field_detail', field_id) 
+            return redirect('crops:planting_field_detail', field_id)
     else:
-        form = SeedUsageForm(initial={'field': field, 'seed': seed}, crop=crop)
+        form = SeedUsageForm(crop=crop)
 
-    return render(request, 'add_seed_usage.html', {'form': form})
+    return render(request, 'resources/add_seed_usage.html', {'form': form})
+
 
 def equipment_detail(request, pk):
     equipment = get_object_or_404(Equipment, pk=pk)
     maintenance_records = MaintenanceRecord.objects.filter(equipment=equipment)
-    return render(request, 'equipment_detail.html', {'equipment': equipment, 'maintenance_records': maintenance_records})
+    return render(request, 'resources/equipment_detail.html', {'equipment': equipment, 'maintenance_records': maintenance_records})
 
 def add_maintenance_record(request, pk):
     equipment = get_object_or_404(Equipment, pk=pk)
@@ -94,7 +91,7 @@ def add_maintenance_record(request, pk):
     else:
         form = MaintenanceRecordForm()
 
-    return render(request, 'add_maintenance_record.html', {'form': form})
+    return render(request, 'resources/add_maintenance_record.html', {'form': form})
 
 def add_fertilizer(request):
     if request.method == 'POST':
@@ -107,11 +104,11 @@ def add_fertilizer(request):
     else:
         form = FertilizerForm()
 
-    return render(request, 'add_fertilizer.html', {'form': form})
+    return render(request, 'resources/add_fertilizer.html', {'form': form})
 
 def fertilizer_list(request):
     fertilizers = Fertilizer.objects.filter(user=request.user)
-    return render(request, 'fertilizer_list.html', {'fertilizers': fertilizers})
+    return render(request, 'resources/fertilizer_list.html', {'fertilizers': fertilizers})
 
 def increase_fertilizer_quantity(request, pk):
     fertilizer = get_object_or_404(Fertilizer, pk=pk)
@@ -125,7 +122,7 @@ def decrease_fertilizer_quantity(request, pk):
         fertilizer.quantity -= 1
         fertilizer.save()
     return redirect('resources:fertilizer_list')
-
+@login_required
 def add_fertilizer_usage(request, field_id):
     field = get_object_or_404(PlantingField, id=field_id)
 
@@ -137,22 +134,28 @@ def add_fertilizer_usage(request, field_id):
             amount_used = usage.amount_used
 
             if amount_used > fertilizer.quantity:
-                form.add_error('amount_used', f"Cannot use more than {fertilizer.quantity} {fertilizer.unit_of_measure}.")
-            else:
-                usage.field = field
-                usage.save()
+                form.add_error('amount_used', 'You cannot use more fertilizer than is available in stock.')
+                return render(request, 'resources/add_fertilizer_usage.html', {
+                    'form': form,
+                    'field': field,
+                })
 
-                fertilizer.quantity -= amount_used
-                fertilizer.save()
+            usage.field = field
+            usage.save()
 
-                return redirect('crops:planting_field_detail', field_id)
+            fertilizer.quantity -= amount_used
+            fertilizer.save()
+
+            return redirect('crops:planting_field_detail', field_id)
     else:
         form = FertilizerUsageForm(user=request.user)
 
-    return render(request, 'add_fertilizer_usage.html', {
+    return render(request, 'resources/add_fertilizer_usage.html', {
         'form': form,
         'field': field,
     })
+
+
 
     
 def add_pesticide(request):
@@ -166,12 +169,12 @@ def add_pesticide(request):
     else:
         form = PesticideForm()
 
-    return render(request, 'add_pesticide.html', {'form': form})
+    return render(request, 'resources/add_pesticide.html', {'form': form})
 
 def pesticide_list(request):
     pesticides = Pesticide.objects.filter(user=request.user)
     
-    return render(request, 'pesticide_list.html', {'pesticides': pesticides})
+    return render(request, 'resources/pesticide_list.html', {'pesticides': pesticides})
 
 
 def increase_quantity_pesticide(request, pesticide_id):
@@ -187,34 +190,29 @@ def decrease_quantity_pesticide(request, pesticide_id):
         pesticide.save()
     return redirect('resources:pesticide_list')
 
+@login_required
 def add_pesticide_usage(request, field_id):
     field = get_object_or_404(PlantingField, id=field_id)
 
     if request.method == 'POST':
-        form = PesticideUsageForm(request.POST, user=request.user) 
+        form = PesticideUsageForm(request.POST, user=request.user)
         if form.is_valid():
-            pesticide = form.cleaned_data['pesticide']
-            quantity_used = form.cleaned_data['quantity_used']
+            usage = form.save(commit=False)
+            usage.field = field
+            usage.save()
 
-            if quantity_used > pesticide.quantity:
-                form.add_error('quantity_used', f"Cannot use more than {pesticide.quantity} {pesticide.get_unit_of_measure_display()}.")
-            else:
-                usage = form.save(commit=False)
-                usage.field = field
-                usage.save()
+            usage.pesticide.quantity -= usage.quantity_used
+            usage.pesticide.save()
 
-                pesticide.quantity -= quantity_used
-                pesticide.save()
-
-                return redirect('crops:planting_field_detail', field_id)  
-
+            return redirect('crops:planting_field_detail', field_id)
     else:
-        form = PesticideUsageForm(user=request.user)  
+        form = PesticideUsageForm(user=request.user)
 
-    return render(request, 'add_pesticide_usage.html', {
+    return render(request, 'resources/add_pesticide_usage.html', {
         'form': form,
         'field': field,
     })
+    
     
 def add_feed(request):
     if request.method == 'POST':
@@ -227,12 +225,12 @@ def add_feed(request):
     else:
         form = FeedForm()
 
-    return render(request, 'add_feed.html', {'form': form})
+    return render(request, 'resources/add_feed.html', {'form': form})
 
 def feed_list(request):
     feeds = Feed.objects.filter(user=request.user)
     
-    return render(request, 'feed_list.html', {'feeds': feeds})
+    return render(request, 'resources/feed_list.html', {'feeds': feeds})
 
 def increase_quantity(request, feed_id):
     feed = Feed.objects.get(id=feed_id)
@@ -270,7 +268,7 @@ def add_feed_report(request, pk):
     else:
         form = FeedReportForm()
 
-    return render(request, 'add_feed_report.html', {
+    return render(request, 'resources/add_feed_report.html', {
         'form': form,
         'grazing_field': grazing_field, 
     })
@@ -284,7 +282,7 @@ def edit_equipment(request, id):
             return redirect('resources:equipment_detail', id) 
     else:
         form = EquipmentForm(instance=equipment)
-    return render(request, 'edit_equipment.html', {'form': form, 'equipment': equipment})
+    return render(request, 'resources/edit_equipment.html', {'form': form, 'equipment': equipment})
 
 def delete_equipment(request, id):
     equipment = get_object_or_404(Equipment, id=id)  
@@ -302,7 +300,7 @@ def edit_seed(request, pk):
             return redirect('resources:seed_list')  
     else:
         form = SeedForm(instance=seed)
-    return render(request, 'edit_seed.html', {'form': form, 'seed': seed})
+    return render(request, 'resources/edit_seed.html', {'form': form, 'seed': seed})
 
 def delete_seed(request, pk):
     seed = get_object_or_404(Seed, pk=pk)
@@ -322,7 +320,7 @@ def edit_fertilizer(request, id):
     else:
         form = FertilizerForm(instance=fertilizer) 
     
-    return render(request, 'edit_fertilizer.html', {'form': form, 'fertilizer': fertilizer})
+    return render(request, 'resources/edit_fertilizer.html', {'form': form, 'fertilizer': fertilizer})
 
 def delete_fertilizer(request, id):
     fertilizer = get_object_or_404(Fertilizer, id=id)
@@ -342,7 +340,7 @@ def edit_pesticide(request, id):
     else:
         form = PesticideForm(instance=pesticide) 
 
-    return render(request, 'edit_pesticide.html', {'form': form, 'pesticide': pesticide})
+    return render(request, 'resources/edit_pesticide.html', {'form': form, 'pesticide': pesticide})
 
 def delete_pesticide(request, id):
     pesticide = get_object_or_404(Pesticide, id=id)

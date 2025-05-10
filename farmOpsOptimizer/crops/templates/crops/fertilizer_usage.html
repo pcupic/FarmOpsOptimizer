@@ -1,0 +1,17 @@
+<div class="flex items-center justify-between mb-2">
+    <h3 class="text-xl font-semibold text-gray-700">Fertilizer Usage</h3>
+    <a href="{% url 'resources:add_fertilizer_usage' planting_field.id %}" class="text-green-600 hover:text-green-800 text-2xl font-bold">+</a>
+</div>
+<ul class="space-y-2">
+    {% for usage in fertilizer_usages %}
+        <li class="py-2">
+            <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg shadow-sm mb-4">
+                <p class="text-gray-700"><strong>Date:</strong> {{ usage.date_applied|date:"F j, Y" }}</p>
+                <p class="text-gray-700"><strong>Fertilizer Type:</strong> {{ usage.fertilizer.name }}</p>
+                <p class="text-gray-700"><strong>Quantity Used:</strong> {{ usage.amount_used }} {{ usage.fertilizer.unit_of_measure }}</p>
+            </div>
+        </li>
+    {% empty %}
+        <p class="text-sm text-gray-500">No fertilizer usage records found.</p>
+    {% endfor %}
+</ul>

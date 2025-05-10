@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <div class="mb-4">
+        <a href="{% url 'crops:add_field' %}" class="bg-[#065f46] text-white px-8 py-3 rounded-md shadow-md">
+            New Field
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% if fields %}
+            {% for field in fields %}
+                <a href="{% url 'crops:planting_field_detail' field.id %}" class="block bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition duration-200">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">{{ field.name }}</h3>
+                    <p><strong>Area:</strong> {{ field.area }} m²</p>
+                    <p><strong>Soil Type:</strong> {{ field.get_soil_type_display }}</p>
+                    <p><strong>Crop:</strong> {% if field.crop %}{{ field.crop.name }}{% else %}No crop assigned{% endif %}</p>
+                    <p><strong>Planting Date:</strong> {% if field.planting_date %}{{ field.planting_date|date:"F j, Y" }}{% else %}Not set{% endif %}</p>
+                    <p><strong>Estimated Value:</strong> {% if field.estimated_value %}€ {{ field.estimated_value }}{% else %}Not set{% endif %}</p>
+                    <p><strong>Light Profile:</strong> {{ field.get_light_profile_display }}</p>
+                </a>
+            {% endfor %}
+        {% else %}
+            <p class="text-center text-gray-600 mt-4">No fields found. Please add a new field.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

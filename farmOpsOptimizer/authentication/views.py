@@ -10,7 +10,7 @@ def register(request):
             return redirect('login')  
     else:
         form = CustomUserCreationForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'authentication/register.html', {'form': form})
 
 def log_out(request):
     logout(request)

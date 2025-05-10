@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto p-6 mt-10 bg-white shadow-xl rounded-2xl animate-fade-in">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-3xl font-bold text-emerald-700">🐄 Livestock Overview</h2>
+        <a href="{% url 'livestock:add_livestock' %}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg shadow-md transition">
+            Add Livestock
+        </a>
+    </div>
+
+    {% if livestock %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for item in livestock %}
+        <div class="p-4 bg-gray-50 hover:bg-gray-100 rounded-xl shadow-sm transition space-y-2">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-blue-700 truncate">
+                    <a href="{% url 'livestock:livestock_detail' item.id %}" class="hover:underline">{{ item.name }}</a>
+                </h3>
+            </div>
+            <p class="text-sm text-gray-600"><strong>Species:</strong> {{ item.species.name }}</p>
+            <p class="text-sm text-gray-600"><strong>Gender:</strong> {{ item.get_gender_display }}</p>
+            {% if item.birth_date %}
+            <p class="text-sm text-gray-600"><strong>Birth:</strong> {{ item.birth_date|date:"M d, Y" }}</p>
+            {% endif %}
+            {% if item.breed %}
+            <p class="text-sm text-gray-600"><strong>Breed:</strong> {{ item.breed }}</p>
+            {% endif %}
+            {% if item.weight %}
+            <p class="text-sm text-gray-600"><strong>Weight:</strong> {{ item.weight }} kg</p>
+            {% endif %}
+            {% if item.grazing_field %}
+            <p class="text-sm text-gray-600"><strong>Field:</strong> {{ item.grazing_field.name }}</p>
+            {% endif %}
+            {% if item.herd %}
+            <p class="text-sm text-gray-600"><strong>Herd:</strong> {{ item.herd.name }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-gray-500">No livestock found. Add some to get started!</p>
+    {% endif %}
+</div>
+
+<style>
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out;
+}
+</style>
+{% endblock %}

@@ -108,6 +108,9 @@ class GrazingField(models.Model):
     estimated_value = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     water_source = models.CharField(max_length=50, blank=True, null=True) 
     
+    def __str__(self):
+        return self.name
+    
 class PlantingReport(models.Model):
     planting_field = models.ForeignKey(PlantingField, on_delete=models.CASCADE, related_name="reports")
     report_date = models.DateTimeField(auto_now_add=True)  

@@ -1,0 +1,10 @@
+<div class="mt-4">
+    <form id="harvest-form" method="POST" action="{% url 'crops:archive_all_reports' planting_field.id %}" 
+    @submit="if (!confirm('Are you sure you want to harvest this field?')) { $event.preventDefault() }">
+        {% csrf_token %}
+        <button type="submit" 
+        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">Harvest Field</button>
+    </form>
+</div>
+
+
