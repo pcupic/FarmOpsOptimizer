@@ -33,10 +33,12 @@
         <p class="font-medium">€{{ equipment.value }}</p>
       </div>
       <div>
+        {% if equipment.last_maintenance_date %}
         <p class="text-gray-600">Last Maintenance Date:</p>
         <p class="font-medium">
           {{ equipment.last_maintenance_date|date:"Y-m-d H:i" }}
         </p>
+        {% endif %}
       </div>
       <div>
         <p class="text-gray-600">Purchase Date:</p>

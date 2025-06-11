@@ -37,9 +37,8 @@ class TaskForm(forms.ModelForm):
         required=False
     )
 
-    related_equipment = forms.ModelMultipleChoiceField(
+    related_equipment = forms.ModelChoiceField(
         queryset=Equipment.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
         required=False
     )
     related_crop = forms.ModelChoiceField(queryset=Crop.objects.all(), required=False)

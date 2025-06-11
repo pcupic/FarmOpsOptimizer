@@ -41,7 +41,7 @@ class Task(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='MEDIUM')
     notes = models.TextField(blank=True, null=True)
-    related_equipment = models.ManyToManyField(Equipment, blank=True)
+    related_equipment = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True)
     related_crop = models.ForeignKey(Crop, on_delete=models.SET_NULL, null=True, blank=True)
     related_livestock = models.ForeignKey(Livestock, on_delete=models.SET_NULL, null=True, blank=True)
     

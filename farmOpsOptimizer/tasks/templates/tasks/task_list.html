@@ -12,8 +12,6 @@
         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Search and Filter</h2>
         <form method="GET">
             <div class="flex flex-wrap gap-4">
-                <!-- Ovdje ide tvoj filter form kao prije -->
-                <!-- ... (isti kod za filter) ... -->
                 <div class="flex-1 min-w-[200px]">
                     <label for="title" class="text-gray-600">Search by Title</label>
                     <input type="text" name="title" id="title" class="w-full p-2 border rounded-md" value="{{ request.GET.title }}">
@@ -52,6 +50,11 @@
                         <button type="button" class="w-full flex justify-between items-center px-4 py-3 text-left bg-gray-100 hover:bg-gray-200 focus:outline-none accordion-header">
                             <div class="flex items-center space-x-2">
                                 <span class="font-semibold text-gray-800">{{ task.title }}</span>
+                                {% if task.completion_date %}
+                                <span class="ml-2 px-2 py-0.5 rounded-full text-xs">
+                                    ✅
+                                </span>
+                            {% endif %}
                                 <span class="ml-2 px-2 py-0.5 rounded-full text-xs font-semibold
                                     {% if task.priority == 'HIGH' %}
                                         bg-red-600 text-white
@@ -80,14 +83,13 @@
                                     -
                                 {% endif %}
                             </p>
-                            <p><strong>Related Equipment:</strong></p>
-                            <ul class="list-disc list-inside mb-2">
-                                {% for equipment in task.related_equipment.all %}
-                                    <li>{{ equipment.name }} ({{ equipment.get_condition_display }})</li>
-                                {% empty %}
-                                    <li>No related equipment</li>
-                                {% endfor %}
-                            </ul>
+                            <p><strong>Related Equipment:</strong>
+                                {% if task.related_equipment %}
+                                    {{ task.related_equipment.name }} </li>
+                                {% else %}
+                                    No related equipment
+                                {% endif %}
+                            </p>
                             <p><strong>Related Crop:</strong> 
                                 {% if task.related_crop %}
                                     {{ task.related_crop.name }}

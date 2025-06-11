@@ -92,7 +92,10 @@ def add_maintenance_record(request, pk):
         if form.is_valid():
             maintenance = form.save(commit=False)
             maintenance.equipment = equipment
-            form.save()
+            maintenance.save()
+            equipment.last_maintenance_date = maintenance.date
+            equipment.save()
+          
             return redirect('resources:equipment_list')  
     else:
         form = MaintenanceRecordForm()

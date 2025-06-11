@@ -59,7 +59,7 @@ class Seed(models.Model):
     name = models.CharField(max_length=100, null=True, blank=True)
     quantity = models.FloatField(null=True, blank=True)
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    crop = models.OneToOneField(Crop, on_delete=models.CASCADE, null=True, blank=True)
+    crop = models.ForeignKey(Crop, on_delete=models.CASCADE, null=True, blank=True)
     sowing_instructions = models.TextField(blank=True, null=True)
     
     def __str__(self):

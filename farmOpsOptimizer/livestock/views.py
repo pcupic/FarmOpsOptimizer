@@ -37,8 +37,8 @@ def species_add(request):
                 species.status = 'approved'
             else:
                 species.status = 'pending'
-            species.created_by = request.user
-            species.save()
+                species.created_by = request.user
+                species.save()
             return redirect('livestock:species_list')  
     else:
         form = SpeciesForm()
@@ -54,7 +54,7 @@ def species_detail(request, pk):
 def livestock_detail(request, id):
     livestock = get_object_or_404(Livestock, id=id)
     
-    latest_health_record = livestock.health_records.order_by('-date_recorded').first()
+    latest_health_record = livestock.health_records.order_by('-date_recorded', '-id').first()
 
     return render(request, 'livestock/livestock_detail.html', {'livestock': livestock, 'latest_health_record': latest_health_record})
 
@@ -66,14 +66,14 @@ def herd_list(request):
 @login_required
 def add_herd(request):
     if request.method == 'POST':
-        form = HerdForm(request.POST)
+        form = HerdForm(request.POST, request=request)
         if form.is_valid():
             herd = form.save(commit=False) 
             herd.user = request.user 
             herd.save()  
             return redirect('livestock:herd_list')
     else:
-        form = HerdForm()
+        form = HerdForm(request=request)
     return render(request, 'livestock/add_herd.html', {'form': form})
 
 @login_required

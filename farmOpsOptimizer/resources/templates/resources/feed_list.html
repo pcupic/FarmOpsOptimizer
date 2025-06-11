@@ -26,6 +26,7 @@
                     <th class="py-3 px-4 border-b border-gray-200 text-left">Name</th>
                     <th class="py-3 px-4 border-b border-gray-200 text-center">Quantity</th>
                     <th class="py-3 px-4 border-b border-gray-200 text-left">Unit of Measure</th>
+                    <th class="py-3 px-4 border-b border-gray-200 text-left">Price per unit</th> 
                     <th class="py-3 px-4 border-b border-gray-200 text-left">Feeding Instructions</th> 
                     <th class="py-3 px-4 border-b border-gray-200 text-left">Actions</th>
                 </tr>
@@ -42,6 +43,7 @@
                         </div>
                     </td>
                     <td class="py-3 px-4 border-b border-gray-200">{{ feed.get_unit_of_measure_display }}</td>
+                    <td class="py-3 px-4 border-b border-gray-200">{{ feed.price_per_unit }}€</td>
                     <td class="py-3 px-4 border-b border-gray-200">{{ feed.feeding_instructions }}</td>  
                     <td class="py-3 px-4 border-b border-gray-200">
                         <a href="{% url 'resources:edit_feed' feed.id %}" class="text-blue-600 hover:underline">Edit</a> |

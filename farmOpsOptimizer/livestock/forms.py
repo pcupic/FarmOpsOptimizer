@@ -2,38 +2,6 @@ from django import forms
 from .models import Livestock, HealthRecord, VaccinationRecord, Species, Herd
 from crops.models import GrazingField
 
-class LivestockForm(forms.ModelForm):
-    class Meta:
-        model = Livestock
-        fields = ['species', 'name', 'gender', 'birth_date', 'weight', 'breed', 'herd', 'grazing_field']
-        widgets = {
-            'species': forms.Select(attrs={
-                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500'
-            }),
-            'name': forms.TextInput(attrs={
-                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500'
-            }),
-            'gender': forms.Select(attrs={
-                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500'
-            }),
-            'birth_date': forms.DateInput(attrs={
-                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500',
-                'type': 'date'
-            }),
-            'weight': forms.NumberInput(attrs={
-                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500'
-            }),
-            'breed': forms.TextInput(attrs={
-                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500'
-            }),
-            'grazing_field': forms.Select(attrs={
-                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500'
-            }),
-            'herd': forms.Select(attrs={
-                'class': 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500'
-            }),
-        }
-
     
 class LivestockForm(forms.ModelForm):
     class Meta:
@@ -234,11 +202,10 @@ class HerdForm(forms.ModelForm):
             }),
         }
         
-    def __init__(self, *args, **kwargs):
-        user = kwargs.get('user') 
+    def __init__(self, request, *args, **kwargs, ):
         super(HerdForm, self).__init__(*args, **kwargs)
         
         self.fields['field'].required = True
-        self.fields['field'].queryset = GrazingField.objects.filter(user=user)  
+        self.fields['field'].queryset = GrazingField.objects.filter(user=request.user)  
         
         self.fields['species'].required = True
