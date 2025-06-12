@@ -66,7 +66,7 @@ def herd_list(request):
 @login_required
 def add_herd(request):
     if request.method == 'POST':
-        form = HerdForm(request.POST, request=request)
+        form = HerdForm(data=request.POST, request=request)
         if form.is_valid():
             herd = form.save(commit=False) 
             herd.user = request.user 

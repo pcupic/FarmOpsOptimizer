@@ -110,7 +110,7 @@ def add_fertilizer(request):
             fertilizer = form.save(commit=False)
             fertilizer.user = request.user
             fertilizer.save()
-            return redirect('resources:add_fertilizer')
+            return redirect('resources:fertilizer_list')
     else:
         form = FertilizerForm()
 
