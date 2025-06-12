@@ -2,5 +2,5 @@
 <p class="text-lg text-gray-600">Soil Type: {{ planting_field.get_soil_type_display }}</p>
 <p class="text-lg text-gray-600">Crop: {% if planting_field.crop %}{{ planting_field.crop.name }}{% else %}No crop assigned{% endif %}</p>
 <p class="text-lg text-gray-600">Planting Date: {% if planting_field.planting_date %}{{ planting_field.planting_date|date:"F j, Y" }}{% else %}Not set{% endif %}</p>
-<p class="text-lg text-gray-600">Estimated Value: {% if planting_field.estimated_value %}{{ planting_field.estimated_value }}{% else %}Not set{% endif %}</p>
+<p class="text-lg text-gray-600">Estimated Value: € {% if planting_field.estimated_value %}{{ planting_field.estimated_value }}{% else %}Not set{% endif %}</p>
 <p class="text-lg text-gray-600">Light Profile: {{ planting_field.get_light_profile_display }}</p>
